@@ -4,22 +4,14 @@ using System.Collections.Generic;
 
 namespace ClothForm
 {
-    public struct Triangle
-    {
-        public int A;
-        public int B;
-        public int C;
-        public Vector3 normal;
-    }
-
-    public struct Vertex
+    public struct Vertex_s
     {
         public Vector3 position;
         public Vector3 normal;
         public Vector2 uv;
     }
 
-    public struct ClothSpring
+    public struct ClothSpring_s
     {
         //Индексы частиц на обоих концах пружины
         public int P1;
@@ -30,7 +22,7 @@ namespace ClothForm
 
         public float _Stiffness;
 
-        public ClothSpring(int PID1, int PID2, float Len, float Stiffness)
+        public ClothSpring_s(int PID1, int PID2, float Len, float Stiffness)
         {
             this.P1 = PID1;
             this.P2 = PID2;
@@ -40,7 +32,7 @@ namespace ClothForm
         }
     }
 
-    public struct ClothParticle
+    public struct ClothParticle_s
     {
         public Vector3 currentPosition;
         public Vector3 currentVelocity;
@@ -51,12 +43,12 @@ namespace ClothForm
         public bool pinned; // истина, если частица закреплена / зафиксирована в позиции
     }
 
-    public struct ClothCollider
+    public struct ClothCollider_s
     {
         public Vector3 Position;
         public float Radius;
 
-        public ClothCollider(Vector3 position, float radius)
+        public ClothCollider_s(Vector3 position, float radius)
         {
             this.Position = position;
             this.Radius = radius;
@@ -65,6 +57,7 @@ namespace ClothForm
 
     public class Cloth
     {
+        private Triangle triangle;
         private const int SimScale = 1;
         private const float minimumPhysicsDelta = 0.01f; // в секундах
         //Размер тканевой сетки
@@ -78,15 +71,15 @@ namespace ClothForm
         private float dampFactor = 0.9f;
         //Сложность сетки. Это количество частиц поперек и вниз в модели.
         public const int gridSize = 13 * SimScale;// 13-
-        private ClothSpring[] springs;
-        private ClothParticle[] particles;
+        private ClothSpring_s[] springs;
+        private ClothParticle_s[] particles;
         private float _timeSinceLastUpdate;
         private Vector3 _gravity;
-        private List<ClothCollider> _colliders = new List<ClothCollider>();
-        private Vertex[] _vertices;
-        public Vertex[] vertices { get { return _vertices; } }
-        private Triangle[] _triangles;
-        public Triangle[] triangles { get { return _triangles; } }
+        private List<ClothCollider_s> _colliders = new List<ClothCollider_s>();
+        private Vertex_s[] _vertices;
+        public Vertex_s[] vertices { get { return _vertices; } }
+        private Triangle_s[] _triangles;
+        public Triangle_s[] triangles { get { return _triangles; } }
         public Cloth()
         {
             _gravity = new Vector3(0, -0.98f * SimScale, 0);
@@ -104,8 +97,8 @@ namespace ClothForm
             //и одна направленная вниз для каждого шара, не находящегося на нижнем крае или рядом с ним
             springCount += (gridSize - 2) * gridSize * 2;
             //Создание пространства для частиц и пружин
-            particles = new ClothParticle[particleCount];
-            springs = new ClothSpring[springCount];
+            particles = new ClothParticle_s[particleCount];
+            springs = new ClothSpring_s[springCount];
             this.InitMesh();
             this.Reset();
         }
@@ -129,36 +122,19 @@ namespace ClothForm
             //и одна направленная вниз для каждого шара, не находящегося на нижнем крае или рядом с ним
             springCount += (gridSize - 2) * gridSize * 2;
             //Создание пространства для частиц и пружин
-            particles = new ClothParticle[particleCount];
-            springs = new ClothSpring[springCount];
+            particles = new ClothParticle_s[particleCount];
+            springs = new ClothSpring_s[springCount];
             this.InitMesh();
             this.Reset();
         }
 
         private void InitMesh()
         {
-            int triangleCount = (gridSize * gridSize) * 2;
-            _triangles = new Triangle[triangleCount];
+            triangle = new Triangle(gridSize);
+            triangle.calculateSides();
+            _triangles = triangle.getTriangles();
             int vertexCount = (gridSize * gridSize);
-            _vertices = new Vertex[vertexCount];
-            int k = 0;
-            //Считает стороны треугольников из которых состоит сетка
-            for (int j = 0; j < gridSize - 1; j++) {
-                for (int i = 0; i < gridSize - 1; i++) {
-                    var i0 = j * gridSize + i;
-                    var i1 = j * gridSize + i + 1;
-                    var i2 = (j + 1) * gridSize + i;
-                    var i3 = (j + 1) * gridSize + i + 1;
-                    _triangles[k].A = i2;
-                    _triangles[k].B = i1;
-                    _triangles[k].C = i0;
-                    k++;
-                    _triangles[k].A = i2;
-                    _triangles[k].B = i3;
-                    _triangles[k].C = i1;
-                    k++;
-                }
-            }
+            _vertices = new Vertex_s[vertexCount];
             //Назначаем координаты вершинам
             for (int j = 0; j < gridSize; j++) {
                 for (int i = 0; i < gridSize; i++) {
@@ -195,62 +171,45 @@ namespace ClothForm
             //Первые (gridSize-1) * gridSize пружины переходят от одного шара к другому, за исключением тех, которые находятся на правом краю.
             for (int j = 0; j < gridSize; j++)
                 for (int i = 0; i < gridSize - 1; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, j * gridSize + i + 1, naturalLength, StretchStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, j * gridSize + i + 1, naturalLength, StretchStiffness);
                     currentSpring++;
                 }
             //Следующие пружины (gridSize-1) * gridSize переходят от одного шара к следующему, за исключением тех, которые находятся на нижнем краю.
             for (int j = 0; j < gridSize - 1; j++)
                 for (int i = 0; i < gridSize; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, (j + 1) * gridSize + i, naturalLength, StretchStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, (j + 1) * gridSize + i, naturalLength, StretchStiffness);
                     currentSpring++;
                 }
             //Следующие (gridSize-1) * (gridSize-1) переходят от шара к нижнему и правому, исключая те, которые находятся внизу или справа.
             for (int j = 0; j < gridSize - 1; j++)
                 for (int i = 0; i < gridSize - 1; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, (j + 1) * gridSize + i + 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, (j + 1) * gridSize + i + 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
                     currentSpring++;
                 }
             //Следующие (gridSize-1) * (gridSize-1) переходят от шара к нижнему и левому, исключая те, которые находятся внизу или справа.
             for (int j = 0; j < gridSize - 1; j++)
                 for (int i = 1; i < gridSize; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, (j + 1) * gridSize + i - 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, (j + 1) * gridSize + i - 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
                     currentSpring++;
                 }
             //Первые пружины (gridSize-2) * gridSize переходят от одного шара к следующему, кроме одного, за исключением тех, которые находятся на правом краю или рядом с ним.
             for (int j = 0; j < gridSize; j++)
                 for (int i = 0; i < gridSize - 2; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, j * gridSize + i + 2, naturalLength * 2, BendStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, j * gridSize + i + 2, naturalLength * 2, BendStiffness);
                     currentSpring++;
                 }
             //Следующие (gridSize-2) * gridSize пружины переходят от одного шара к следующему, кроме одного ниже, за исключением тех, которые находятся на нижнем крае или рядом с ним.
             for (int j = 0; j < gridSize - 2; j++)
                 for (int i = 0; i < gridSize; i++) {
-                    springs[currentSpring] = new ClothSpring(j * gridSize + i, (j + 2) * gridSize + i, naturalLength * 2, BendStiffness);
+                    springs[currentSpring] = new ClothSpring_s(j * gridSize + i, (j + 2) * gridSize + i, naturalLength * 2, BendStiffness);
                     currentSpring++;
                 }
             UpdateMesh();
         }
 
-        private static Vector3 CalculateNormal(Vector3 VA, Vector3 VB, Vector3 VC)
-        {
-            Vector3 a, b;
-            a = VB - VA;
-            b = VC - VA;
-            var normal = Vector3.Cross(a, b);
-            normal.Normalize();
-            return normal;
-        }
-
         private void UpdateMesh()
         {
-            //Вычисляет нормали треугольников
-            for (int i = 0; i < _triangles.Length; i++) {
-                var t = _triangles[i];
-                var A = vertices[t.A].position;
-                var B = vertices[t.B].position;
-                var C = vertices[t.C].position;
-                _triangles[i].normal = CalculateNormal(A, B, C);
-            }
+            triangle.calculateNormals(vertices);
             //Вычисляет нормали для текщих частиц
             for (int j = 0; j < gridSize; j++)
                 for (int i = 0; i < gridSize; i++) {
@@ -359,7 +318,7 @@ namespace ClothForm
 
         public void AddCollider(Vector3 position, float radius)
         {
-            var col = new ClothCollider(position, radius);
+            var col = new ClothCollider_s(position, radius);
             _colliders.Add(col);
         }
 
