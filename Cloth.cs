@@ -4,12 +4,7 @@ using System.Collections.Generic;
 
 namespace ClothForm
 {
-    public struct Vertex_s
-    {
-        public Vector3 position;
-        public Vector3 normal;
-        public Vector2 uv;
-    }
+    
 
     public struct ClothSpring_s
     {
@@ -58,6 +53,7 @@ namespace ClothForm
     public class Cloth
     {
         private Triangle triangle;
+        private Vertex vertex;
         private const int SimScale = 1;
         private const float minimumPhysicsDelta = 0.01f; // в секундах
         //Размер тканевой сетки
@@ -133,15 +129,9 @@ namespace ClothForm
             triangle = new Triangle(gridSize);
             triangle.calculateSides();
             _triangles = triangle.getTriangles();
-            int vertexCount = (gridSize * gridSize);
-            _vertices = new Vertex_s[vertexCount];
-            //Назначаем координаты вершинам
-            for (int j = 0; j < gridSize; j++) {
-                for (int i = 0; i < gridSize; i++) {
-                    int ballID = j * gridSize + i;
-                    _vertices[ballID].uv = new Vector2(i / (float)gridSize, j / (float)gridSize);
-                }
-            }
+            vertex = new Vertex(gridSize);
+            vertex.calculateVertices();
+            _vertices = vertex.getVertices();
         }
 
         public void Reset()
@@ -210,34 +200,8 @@ namespace ClothForm
         private void UpdateMesh()
         {
             triangle.calculateNormals(vertices);
-            //Вычисляет нормали для текщих частиц
-            for (int j = 0; j < gridSize; j++)
-                for (int i = 0; i < gridSize; i++) {
-                    int BallID = j * gridSize + i;
-                    Vector3 normal = Vector3.Zero;
-                    int count = 0;
-                    for (int Y = 0; Y <= 1; Y++)
-                        for (int X = 0; X <= 1; X++) {
-                            if (X + i < gridSize && Y + j < gridSize) {
-                                int index = (j + Y) * gridSize + (i + X) * 2;
-                                normal += _triangles[index].normal;
-                                index++;
-                                normal += _triangles[index].normal;
-                                count += 2;
-                            }
-                        }
-                    normal /= (float)count;
-                    _vertices[BallID].normal = normal;
-                }
-
-            for (int j = 0; j < gridSize; j++)
-                for (int i = 0; i < gridSize; i++)
-                {
-                    int BallID = j * gridSize + i;
-                    _vertices[BallID].position = particles[BallID].currentPosition;
-                }
-
-
+            vertex.calculateNormal(triangles);
+            vertex.calculatePosition(particles);
             // TODO .UpdateBoundingBox();
         }
 
