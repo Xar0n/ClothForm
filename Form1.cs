@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using OpenTK.Input;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;

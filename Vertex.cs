@@ -56,7 +56,7 @@ namespace ClothForm
                 }
         }
         
-        public void calculatePosition(ClothParticle_s[] particles)
+        public void calculatePosition(Particle_s[] particles)
         {
             for (int j = 0; j < gridSize; j++)
                 for (int i = 0; i < gridSize; i++)
