@@ -4,27 +4,6 @@ using System.Collections.Generic;
 
 namespace ClothForm
 {
-    public struct Spring_s
-    {
-        //Индексы частиц на обоих концах пружины
-        public int P1;
-        public int P2;
-
-        public float NaturalLength;
-        public float InverseLength;
-
-        public float _Stiffness;
-
-        public Spring_s(int PID1, int PID2, float Len, float Stiffness)
-        {
-            this.P1 = PID1;
-            this.P2 = PID2;
-            this.NaturalLength = Len;
-            this.InverseLength = 1.0f / Len;
-            this._Stiffness = Stiffness;
-        }
-    }
-
     public struct Collider_s
     {
         public Vector3 Position;
@@ -42,6 +21,7 @@ namespace ClothForm
         private Triangle triangle;
         private Vertex vertex;
         private Particle particle;
+        private Spring spring;
         private const int SimScale = 1;
         private const float minimumPhysicsDelta = 0.01f; // в секундах
         //Размер тканевой сетки
@@ -54,7 +34,7 @@ namespace ClothForm
         //Коэффициент демпфирования. Скорость умножается на это
         private float dampFactor = 0.9f;
         //Сложность сетки. Это количество частиц поперек и вниз в модели.
-        public const int gridSize = 13 * SimScale;// 13-
+        public const int gridSize = 13 * SimScale;
         private Spring_s[] springs;
         private Particle_s[] particles;
         private float _timeSinceLastUpdate;
@@ -67,24 +47,12 @@ namespace ClothForm
         public Cloth()
         {
             _gravity = new Vector3(0, -0.98f * SimScale, 0);
-            //Рассчитать количество частиц
             particle = new Particle(gridSize, mass, clothScale);
             triangle = new Triangle(gridSize);
             vertex = new Vertex(gridSize);
+            spring = new Spring(gridSize,StretchStiffness, BendStiffness);
             particles = particle.getParticles();
-            // Подсчитываем количество пружин
-            // Есть пружина, указывающая вправо для каждого шара, который не находится на правом краю,
-            // и пружина направлена ​​вниз для каждого шара не на нижнем крае
-            int springCount = (gridSize - 1) * gridSize * 2;
-            // Пружина направлена ​​вниз и вправо для каждого шара не снизу или справа, 
-            //и одна пружина направлена ​​вниз и влево для каждого шара не снизу или слева
-            springCount += (gridSize - 1) * (gridSize - 1) * 2;
-            // Имеется пружина, указывающая вправо (к следующему, кроме одного шара) 
-            //для каждого шара, который не находится на правом краю или рядом с ним, 
-            //и одна направленная вниз для каждого шара, не находящегося на нижнем крае или рядом с ним
-            springCount += (gridSize - 2) * gridSize * 2;
-            //Создание пространства для частиц и пружин
-            springs = new Spring_s[springCount];
+            springs = spring.getSprings();
             this.InitMesh();
             this.Reset();
         }
@@ -121,54 +89,14 @@ namespace ClothForm
 
         public void Reset()
         {
-            //Инициализируем частицы в равномерно распределенной сетке в плоскости x-z
             particle.initInMesh();
-            //Расстояние между частицами
-            float naturalLength = (particles[0].currentPosition - particles[1].currentPosition).LengthFast;
             //Закрепляет верхнюю левую и верхнюю правую частицы на месте
-            particles[0].pinned = true;
-            particles[gridSize - 1].pinned = true;
+            particle.pin(0);
+            particle.pin(gridSize - 1);
             //Закрепляет нижнюю левую и нижнюю правую частицы
-            particles[gridSize * (gridSize - 1)].pinned = true;
-            particles[gridSize * gridSize - 1].pinned = true;
-            //Инициализирует пружины
-            int currentSpring = 0;
-            //Первые (gridSize-1) * gridSize пружины переходят от одного шара к другому, за исключением тех, которые находятся на правом краю.
-            for (int j = 0; j < gridSize; j++)
-                for (int i = 0; i < gridSize - 1; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, j * gridSize + i + 1, naturalLength, StretchStiffness);
-                    currentSpring++;
-                }
-            //Следующие пружины (gridSize-1) * gridSize переходят от одного шара к следующему, за исключением тех, которые находятся на нижнем краю.
-            for (int j = 0; j < gridSize - 1; j++)
-                for (int i = 0; i < gridSize; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, (j + 1) * gridSize + i, naturalLength, StretchStiffness);
-                    currentSpring++;
-                }
-            //Следующие (gridSize-1) * (gridSize-1) переходят от шара к нижнему и правому, исключая те, которые находятся внизу или справа.
-            for (int j = 0; j < gridSize - 1; j++)
-                for (int i = 0; i < gridSize - 1; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, (j + 1) * gridSize + i + 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
-                    currentSpring++;
-                }
-            //Следующие (gridSize-1) * (gridSize-1) переходят от шара к нижнему и левому, исключая те, которые находятся внизу или справа.
-            for (int j = 0; j < gridSize - 1; j++)
-                for (int i = 1; i < gridSize; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, (j + 1) * gridSize + i - 1, naturalLength * (float)Math.Sqrt(2.0f), BendStiffness);
-                    currentSpring++;
-                }
-            //Первые пружины (gridSize-2) * gridSize переходят от одного шара к следующему, кроме одного, за исключением тех, которые находятся на правом краю или рядом с ним.
-            for (int j = 0; j < gridSize; j++)
-                for (int i = 0; i < gridSize - 2; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, j * gridSize + i + 2, naturalLength * 2, BendStiffness);
-                    currentSpring++;
-                }
-            //Следующие (gridSize-2) * gridSize пружины переходят от одного шара к следующему, кроме одного ниже, за исключением тех, которые находятся на нижнем крае или рядом с ним.
-            for (int j = 0; j < gridSize - 2; j++)
-                for (int i = 0; i < gridSize; i++) {
-                    springs[currentSpring] = new Spring_s(j * gridSize + i, (j + 2) * gridSize + i, naturalLength * 2, BendStiffness);
-                    currentSpring++;
-                }
+            particle.pin(gridSize * (gridSize - 1));
+            particle.pin(gridSize * gridSize - 1);
+            spring.init(particles);
             UpdateMesh();
         }
 
@@ -192,15 +120,7 @@ namespace ClothForm
                 _timeSinceLastUpdate -= minimumPhysicsDelta;
                 updateMade = true;
                 //Рассчитывает натяжение пружин
-                for (int i = 0; i < springs.Length; i++) {
-                    Vector3 tensionDirection = (particles[springs[i].P1].currentPosition - particles[springs[i].P2].currentPosition);
-                    float springLength = tensionDirection.LengthFast;
-                    float extension = springLength - springs[i].NaturalLength;
-                    float tension = springs[i]._Stiffness * (extension * springs[i].InverseLength);
-                    tensionDirection *= (float)(tension / springLength);
-                    particles[springs[i].P2].tension += tensionDirection;
-                    particles[springs[i].P1].tension -= tensionDirection;
-                }
+                particle.calculateTension(springs);
                 //Вычисляет следующие частицы из текущих частиц
                 for (int i = 0; i < particles.Length; i++) {
                     //Если шар зафиксирован, перенести положение и обнулить скорость, в противном случае рассчитать новые значения.
@@ -210,6 +130,7 @@ namespace ClothForm
                         // If MoveCloth Then _Particles[i].NextPosition.Add(VectorCreate(0, 2 * timePassedInSeconds, 5 * timePassedInSeconds));
                         continue;
                     }
+
                     //Рассчитываем силу, действующую на этот шар
                     Vector3 force = _gravity + particles[i].tension;
                     //Рассчитываем ускорение
@@ -235,12 +156,7 @@ namespace ClothForm
                         }
                     }
                 }
-                //Меняем местами указатели текущих частиц и новых частиц
-                for (int i = 0; i < particles.Length; i++) {
-                    particles[i].currentPosition = particles[i].nextPosition;
-                    particles[i].currentVelocity = particles[i].nextVelocity;
-                    particles[i].tension = Vector3.Zero;
-                }
+                particle.replaceCurrentNew();
             }
             //Обновляем сетку, если мы обновили позиции
             if (updateMade) UpdateMesh();
@@ -252,9 +168,9 @@ namespace ClothForm
             _colliders.Add(col);
         }
 
-        public void UnpinParticle(int index)
+        public void pinParticle(int index)
         {
-            particles[index].pinned = false;
+            particle.pin(index);
         }
     }
 }

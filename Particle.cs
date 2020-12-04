@@ -27,6 +27,7 @@ namespace ClothForm
             this.clothScale = clothScale;
         }
 
+        //Инициализируем частицы в равномерно распределенной сетке в плоскости x-z
         public void initInMesh()
         {
             for (int j = 0; j < gridSize; j++)
@@ -43,9 +44,34 @@ namespace ClothForm
                 }
         }
 
+        public void calculateTension(Spring_s[] springs)
+        {
+            for (int i = 0; i < springs.Length; i++)
+            {
+                Vector3 tensionDirection = (particles[springs[i].P1].currentPosition - particles[springs[i].P2].currentPosition);
+                float springLength = tensionDirection.LengthFast;
+                float extension = springLength - springs[i].NaturalLength;
+                float tension = springs[i].Stiffness * (extension * springs[i].InverseLength);
+                tensionDirection *= (float)(tension / springLength);
+                particles[springs[i].P2].tension += tensionDirection;
+                particles[springs[i].P1].tension -= tensionDirection;
+            }
+        }
+
+        public void replaceCurrentNew()
+        {
+            //Меняем местами указатели текущих частиц и новых частиц
+            for (int i = 0; i < particles.Length; i++)
+            {
+                particles[i].currentPosition = particles[i].nextPosition;
+                particles[i].currentVelocity = particles[i].nextVelocity;
+                particles[i].tension = Vector3.Zero;
+            }
+        }
+
         public void pin(int index)
         {
-
+            particles[index].pinned = !particles[index].pinned;
         }
 
         public Particle_s[] getParticles()
