@@ -1,52 +1,37 @@
 ﻿using OpenTK;
-using System;
 using System.Collections.Generic;
 
 namespace ClothForm
 {
-    public struct Collider_s
-    {
-        public Vector3 Position;
-        public float Radius;
-
-        public Collider_s(Vector3 position, float radius)
-        {
-            this.Position = position;
-            this.Radius = radius;
-        }
-    }
-
-    public class Cloth
+    class Cloth
     {
         private Triangle triangle;
         private Vertex vertex;
         private Particle particle;
         private Spring spring;
         private const int SimScale = 1;
-        private const float minimumPhysicsDelta = 0.01f; // в секундах
+        private const float minimumPhysicsDelta = 0.01f;
         //Размер тканевой сетки
         private const float clothScale = 20.0f; //10        
         //Значения данные каждой пружине
         private float StretchStiffness = 2.5f * clothScale; //Жесткость при растяжении
         private float BendStiffness = 1.0f * clothScale; //Жесткость при сгибании
-        //Значения данные каждому шару
         private float mass = 0.01f * SimScale;
         //Коэффициент демпфирования. Скорость умножается на это
         private float dampFactor = 0.9f;
-        //Сложность сетки. Это количество частиц поперек и вниз в модели.
         public const int gridSize = 13 * SimScale;
         private Spring_s[] springs;
         private Particle_s[] particles;
-        private float _timeSinceLastUpdate;
-        private Vector3 _gravity;
-        private List<Collider_s> _colliders = new List<Collider_s>();
+        private float timeSinceLastUpdate;
+        private Vector3 gravity;
+        private List<Sphere_s> _colliders = new List<Sphere_s>();
         private Vertex_s[] _vertices;
         public Vertex_s[] vertices { get { return _vertices; } }
         private Triangle_s[] _triangles;
         public Triangle_s[] triangles { get { return _triangles; } }
         public Cloth()
         {
-            _gravity = new Vector3(0, -0.98f * SimScale, 0);
+            gravity = new Vector3(0, -0.98f * SimScale, 0);
             particle = new Particle(gridSize, mass, clothScale);
             triangle = new Triangle(gridSize);
             vertex = new Vertex(gridSize);
@@ -61,7 +46,7 @@ namespace ClothForm
         {
             StretchStiffness = StretchStiffnessSpring * clothScale; //Жесткость при растяжении
             BendStiffness = BendStiffnessSpring * clothScale; //Жесткость при сгибании
-            _gravity = new Vector3(0, -0.98f * SimScale, 0);
+            gravity = new Vector3(0, -0.98f * SimScale, 0);
             // Подсчитываем количество пружин
             // Есть пружина, указывающая вправо для каждого шара, который не находится на правом краю,
             // и пружина направлена ​​вниз для каждого шара не на нижнем крае
@@ -91,11 +76,11 @@ namespace ClothForm
         {
             particle.initInMesh();
             //Закрепляет верхнюю левую и верхнюю правую частицы на месте
-            particle.pin(0);
-            particle.pin(gridSize - 1);
+           // particle.pin(0);
+           // particle.pin(gridSize - 1);
             //Закрепляет нижнюю левую и нижнюю правую частицы
-            particle.pin(gridSize * (gridSize - 1));
-            particle.pin(gridSize * gridSize - 1);
+          //  particle.pin(gridSize * (gridSize - 1));
+         //   particle.pin(gridSize * gridSize - 1);
             spring.init(particles);
             UpdateMesh();
         }
@@ -105,7 +90,6 @@ namespace ClothForm
             triangle.calculateNormals(vertices);
             vertex.calculateNormal(triangles);
             vertex.calculatePosition(particles);
-            // TODO .UpdateBoundingBox();
         }
 
         public void Simulate(float deltaTime)
@@ -113,28 +97,20 @@ namespace ClothForm
             //Если время не прошло ничего не обновлять
             if (deltaTime <= 0) return;
             //Обновляет физику с интервалом в 10 мс, чтобы предотвратить проблемы с разной частотой кадров, вызывающие разное затухание
-            _timeSinceLastUpdate += deltaTime;
-            bool updateMade = false;//мы обновили позиции и т.д. на этот раз?
+            timeSinceLastUpdate += deltaTime;
+            bool updateMade = false;
             float timePassedInSeconds = minimumPhysicsDelta;
-            while (_timeSinceLastUpdate > minimumPhysicsDelta) {
-                _timeSinceLastUpdate -= minimumPhysicsDelta;
+            while (timeSinceLastUpdate > minimumPhysicsDelta) {
+                timeSinceLastUpdate -= minimumPhysicsDelta;
                 updateMade = true;
-                //Рассчитывает натяжение пружин
                 particle.calculateTension(springs);
                 //Вычисляет следующие частицы из текущих частиц
+
                 for (int i = 0; i < particles.Length; i++) {
                     //Если шар зафиксирован, перенести положение и обнулить скорость, в противном случае рассчитать новые значения.
-                    if (particles[i].pinned) {
-                        particles[i].nextPosition = particles[i].currentPosition;
-                        particles[i].nextVelocity = Vector3.Zero;
-                        // If MoveCloth Then _Particles[i].NextPosition.Add(VectorCreate(0, 2 * timePassedInSeconds, 5 * timePassedInSeconds));
-                        continue;
-                    }
-
-                    //Рассчитываем силу, действующую на этот шар
-                    Vector3 force = _gravity + particles[i].tension;
-                    //Рассчитываем ускорение
-                    Vector3 acceleration = force * (float)particles[i].inverseMass;
+                    if (particle.checkPin(i)) continue;
+                    Vector3 force = gravity + particles[i].tension;
+                    Vector3 acceleration = force * particles[i].inverseMass;
                     //Обновление скорости
                     particles[i].nextVelocity = particles[i].currentVelocity + (acceleration * timePassedInSeconds);
                     //Демпфируем скорость
@@ -142,29 +118,17 @@ namespace ClothForm
                     //Рассчитываем новую позицию
                     force = particles[i].nextVelocity * timePassedInSeconds;
                     particles[i].nextPosition = particles[i].currentPosition + force;
-
-                    //Проверяем против коллайдеров
-                    for (int j = 0; j < _colliders.Count; j++) {
-                        Vector3 P = particles[i].nextPosition - _colliders[j].Position;
-                        float cR = _colliders[j].Radius * 1.08f; // длина образующей поверхности 1,05 https://life-prog.ru/1_43663_bokovoy-poverhnosti-kolodki.html
-                        if (P.LengthSquared < cR * cR) {
-                            P.Normalize();
-                            P *= cR;
-                            particles[i].nextPosition = P + _colliders[j].Position;
-                            particles[i].nextVelocity = Vector3.Zero;
-                            break;
-                        }
-                    }
+                   // particle.checkSphere(_colliders, i);
+                    particle.checkFloor(_colliders, i);
                 }
                 particle.replaceCurrentNew();
             }
-            //Обновляем сетку, если мы обновили позиции
             if (updateMade) UpdateMesh();
         }
 
-        public void AddCollider(Vector3 position, float radius)
+        public void addSphere(Vector3 position, float radius)
         {
-            var col = new Collider_s(position, radius);
+            var col = new Sphere_s(position, radius);
             _colliders.Add(col);
         }
 

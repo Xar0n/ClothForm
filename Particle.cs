@@ -1,5 +1,5 @@
 ﻿using OpenTK;
-
+using System.Collections.Generic;
 namespace ClothForm
 {
     public struct Particle_s
@@ -74,6 +74,43 @@ namespace ClothForm
             particles[index].pinned = !particles[index].pinned;
         }
 
+        public void checkSphere(List<Sphere_s> colliders, int index)
+        {
+            for (int j = 0; j < colliders.Count; j++)
+            {
+                Vector3 P = particles[index].nextPosition - colliders[j].Position;
+                float cR = colliders[j].Radius * 1.08f; // длина образующей поверхности 1,05 https://life-prog.ru/1_43663_bokovoy-poverhnosti-kolodki.html
+                if (P.LengthSquared < cR * cR)
+                {
+                    P.Normalize();
+                    P *= cR;
+                    particles[index].nextPosition = P + colliders[j].Position;
+                    particles[index].nextVelocity = Vector3.Zero;
+                    break;
+                }
+            }
+        }
+
+        public void checkFloor(List<Sphere_s> colliders, int index)
+        {
+            Vector3 P = particles[index].nextPosition;
+            if (P.Y < -8.5f) {
+                particles[index].nextPosition.Y = -8.5f;
+                particles[index].nextVelocity = Vector3.Zero;
+            }
+        }
+
+        public bool checkPin(int index)
+        {
+            if (particles[index].pinned)
+            {
+                particles[index].nextPosition = particles[index].currentPosition;
+                particles[index].nextVelocity = Vector3.Zero;
+                // If MoveCloth Then _Particles[i].NextPosition.Add(VectorCreate(0, 2 * timePassedInSeconds, 5 * timePassedInSeconds));
+                return true;
+            }
+            return false;
+        }
         public Particle_s[] getParticles()
         {
             return particles;
