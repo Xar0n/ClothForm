@@ -30,13 +30,7 @@ namespace ClothForm
         {
             runSim = false;
             mouseDownLeft = false;
-           // timer1.Interval = 1000 / 60;
-          //  timer1.Enabled = true;
             mesh = false;
-           // cloth = new Cloth();
-           // cloth.AddCollider(Vector3.Zero, 5); 
-          //  lastTime = timer.ElapsedMilliseconds / 1000.0f;//Перенести
-         //   timer.Start();
             curAngleHorizontal = 0;
             curAngleVertical = 0;
             Bitmap image = new Bitmap(Image.FromFile("cloth.png"));
@@ -59,6 +53,7 @@ namespace ClothForm
         private void renderFrame()
         {
             #region FRAME SETUP
+            GL.ClearColor(0.2f, 0.2f, 0.4f, 0.5f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
@@ -68,11 +63,16 @@ namespace ClothForm
             #region LIGHTING
             float[] mat_specular = { 1.0f, 1.0f, 1.0f, 1.0f };
             float[] mat_shininess = { 50.0f };
-            float[] light_position = { 1000.0f, 500.0f, 1000.0f, 100.0f };
-            float[] light_ambient = { 0.5f, 0.5f, 0.5f, 1.0f };
+            float[] light_position = {1000.0f, 500.0f, 1000.0f, 100.0f};
+            float[] light_ambient = {0.5f, 0.5f, 0.5f, 1.0f};
+            float[] light_diffuze = {0.5f, 0.5f, 0.3f, 0.0f};
             GL.Light(LightName.Light0, LightParameter.Position, light_position);
+            GL.Light(LightName.Light0, LightParameter.Ambient, light_ambient);
+            GL.Light(LightName.Light0, LightParameter.Diffuse, light_diffuze);
+            //GL.Light();
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
+            //GL.Enable(EnableCap.Light1);
             GL.Enable(EnableCap.ColorMaterial);
             #endregion
             #region TEXTURING
@@ -96,8 +96,8 @@ namespace ClothForm
             var lookMat = Matrix4.LookAt(camPos, Vector3.Zero, Vector3.UnitY);
             var modelMat = Matrix4.CreateRotationY(curAngleHorizontal);
             lookMat = modelMat * lookMat;
-           // modelMat = Matrix4.CreateRotationZ(curAngleVertical);
-           // lookMat = modelMat * lookMat;
+            modelMat = Matrix4.CreateRotationZ(curAngleVertical);
+            lookMat = modelMat * lookMat;
             GL.LoadMatrix(ref lookMat);
             #endregion
             #region RENDERING
@@ -111,7 +111,6 @@ namespace ClothForm
                 var A = cloth.vertices[t.A];
                 var B = cloth.vertices[t.B];
                 var C = cloth.vertices[t.C];
-
                 if (!mesh) GL.Color4(Color.White);
                 else GL.Color4(Color.Red);
                 GL.Normal3(A.normal.X, A.normal.Y, A.normal.Z);
@@ -125,7 +124,7 @@ namespace ClothForm
                 GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
             }
             GL.End();
-            drawSpehere(5, 0, 0);
+            drawSpehere(2 - 0.2, 100, 100);
             #endregion
         }
 
@@ -212,7 +211,7 @@ namespace ClothForm
             timer1.Interval = 1000 / 60;
             timer1.Enabled = true;
             cloth = new Cloth();
-            cloth.addSphere(Vector3.Zero, 5);
+            cloth.addSphere(Vector3.Zero, 2);
         }
 
         private void отчиститьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -224,28 +223,24 @@ namespace ClothForm
         {
             int i, ix, iy;
             double x, y, z;
-            for (iy = 0; iy < ny; ++iy)
-            {
-
+            for (iy = 0; iy < ny; ++iy) {
                 GL.Begin(PrimitiveType.QuadStrip);
-                for (ix = 0; ix <= nx; ++ix)
-                {
+                for (ix = 0; ix <= nx; ++ix) {
                     x = r * Math.Sin(iy * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx);
                     y = r * Math.Sin(iy * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx);
                     z = r * Math.Cos(iy * Math.PI / ny);
-                    GL.Normal3(x, y, z);//нормаль направлена от центра
+                    GL.Normal3(x, y, z);
                     GL.TexCoord2((double)ix / (double)nx, (double)iy / (double)ny);
                     GL.Vertex3(x, y, z);
-
                     x = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx);
                     y = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx);
                     z = r * Math.Cos((iy + 1) * Math.PI / ny);
                     GL.Normal3(x, y, z);
-                    GL.TexCoord2((double)ix / (double)nx, (double)(iy + 1) / (double)ny);
+                    GL.TexCoord2((double)ix / (double)nx, (double)(iy+1) / (double)ny);
                     GL.Vertex3(x, y, z);
                 }
                 GL.End();
             }
         }
-    }
+        }
 }

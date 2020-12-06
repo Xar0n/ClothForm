@@ -76,11 +76,11 @@ namespace ClothForm
         {
             particle.initInMesh();
             //Закрепляет верхнюю левую и верхнюю правую частицы на месте
-           // particle.pin(0);
-           // particle.pin(gridSize - 1);
+            particle.pin(0);
+            particle.pin(gridSize - 1);
             //Закрепляет нижнюю левую и нижнюю правую частицы
-          //  particle.pin(gridSize * (gridSize - 1));
-         //   particle.pin(gridSize * gridSize - 1);
+            particle.pin(gridSize * (gridSize - 1));
+            particle.pin(gridSize * gridSize - 1);
             spring.init(particles);
             UpdateMesh();
         }
@@ -94,7 +94,6 @@ namespace ClothForm
 
         public void Simulate(float deltaTime)
         {
-            //Если время не прошло ничего не обновлять
             if (deltaTime <= 0) return;
             //Обновляет физику с интервалом в 10 мс, чтобы предотвратить проблемы с разной частотой кадров, вызывающие разное затухание
             timeSinceLastUpdate += deltaTime;
@@ -104,21 +103,15 @@ namespace ClothForm
                 timeSinceLastUpdate -= minimumPhysicsDelta;
                 updateMade = true;
                 particle.calculateTension(springs);
-                //Вычисляет следующие частицы из текущих частиц
-
                 for (int i = 0; i < particles.Length; i++) {
-                    //Если шар зафиксирован, перенести положение и обнулить скорость, в противном случае рассчитать новые значения.
                     if (particle.checkPin(i)) continue;
                     Vector3 force = gravity + particles[i].tension;
                     Vector3 acceleration = force * particles[i].inverseMass;
-                    //Обновление скорости
                     particles[i].nextVelocity = particles[i].currentVelocity + (acceleration * timePassedInSeconds);
-                    //Демпфируем скорость
                     particles[i].nextVelocity *= dampFactor;
-                    //Рассчитываем новую позицию
                     force = particles[i].nextVelocity * timePassedInSeconds;
                     particles[i].nextPosition = particles[i].currentPosition + force;
-                   // particle.checkSphere(_colliders, i);
+                    particle.checkSphere(_colliders, i);
                     particle.checkFloor(_colliders, i);
                 }
                 particle.replaceCurrentNew();
