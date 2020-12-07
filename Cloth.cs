@@ -24,7 +24,7 @@ namespace ClothForm
         private Particle_s[] particles;
         private float timeSinceLastUpdate;
         private Vector3 gravity;
-        private List<Sphere_s> _colliders = new List<Sphere_s>();
+        private Sphere_s _colliders = new Sphere_s();
         private Vertex_s[] _vertices;
         public Vertex_s[] vertices { get { return _vertices; } }
         private Triangle_s[] _triangles;
@@ -79,8 +79,8 @@ namespace ClothForm
             particle.pin(0);
             particle.pin(gridSize - 1);
             //Закрепляет нижнюю левую и нижнюю правую частицы
-            particle.pin(gridSize * (gridSize - 1));
-            particle.pin(gridSize * gridSize - 1);
+            //particle.pin(gridSize * (gridSize - 1));
+            //particle.pin(gridSize * gridSize - 1);
             spring.init(particles);
             UpdateMesh();
         }
@@ -112,7 +112,7 @@ namespace ClothForm
                     force = particles[i].nextVelocity * timePassedInSeconds;
                     particles[i].nextPosition = particles[i].currentPosition + force;
                     particle.checkSphere(_colliders, i);
-                    particle.checkFloor(_colliders, i);
+                    particle.checkFloor(i);
                 }
                 particle.replaceCurrentNew();
             }
@@ -122,7 +122,12 @@ namespace ClothForm
         public void addSphere(Vector3 position, float radius)
         {
             var col = new Sphere_s(position, radius);
-            _colliders.Add(col);
+            _colliders = col;
+        }
+
+        public void changePosistionSphere(Vector3 position)
+        {
+            _colliders.Position = position;
         }
 
         public void pinParticle(int index)

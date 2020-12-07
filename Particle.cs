@@ -27,7 +27,6 @@ namespace ClothForm
             this.clothScale = clothScale;
         }
 
-        //Инициализируем частицы в равномерно распределенной сетке в плоскости x-z
         public void initInMesh()
         {
             for (int j = 0; j < gridSize; j++)
@@ -60,7 +59,6 @@ namespace ClothForm
 
         public void replaceCurrentNew()
         {
-            //Меняем местами указатели текущих частиц и новых частиц
             for (int i = 0; i < particles.Length; i++)
             {
                 particles[i].currentPosition = particles[i].nextPosition;
@@ -74,24 +72,19 @@ namespace ClothForm
             particles[index].pinned = !particles[index].pinned;
         }
 
-        public void checkSphere(List<Sphere_s> colliders, int index)
+        public void checkSphere(Sphere_s colliders, int index)
         {
-            for (int j = 0; j < colliders.Count; j++)
-            {
-                Vector3 P = particles[index].nextPosition - colliders[j].Position;
-                float cR = colliders[j].Radius * 1.08f; // длина образующей поверхности 1,05 https://life-prog.ru/1_43663_bokovoy-poverhnosti-kolodki.html
-                if (P.LengthSquared < cR * cR)
-                {
-                    P.Normalize();
-                    P *= cR;
-                    particles[index].nextPosition = P + colliders[j].Position;
-                    particles[index].nextVelocity = Vector3.Zero;
-                    break;
-                }
+            Vector3 P = particles[index].nextPosition - colliders.Position;
+            float cR = colliders.Radius * 1.08f; // длина образующей поверхности 1,05 https://life-prog.ru/1_43663_bokovoy-poverhnosti-kolodki.html
+            if (P.LengthSquared < cR * cR) {
+                P.Normalize();
+                P *= cR;
+                particles[index].nextPosition = P + colliders.Position;
+                particles[index].nextVelocity = Vector3.Zero;
             }
         }
 
-        public void checkFloor(List<Sphere_s> colliders, int index)
+        public void checkFloor(int index)
         {
             Vector3 P = particles[index].nextPosition;
             if (P.Y < -8.5f) {
@@ -106,7 +99,6 @@ namespace ClothForm
             {
                 particles[index].nextPosition = particles[index].currentPosition;
                 particles[index].nextVelocity = Vector3.Zero;
-                // If MoveCloth Then _Particles[i].NextPosition.Add(VectorCreate(0, 2 * timePassedInSeconds, 5 * timePassedInSeconds));
                 return true;
             }
             return false;

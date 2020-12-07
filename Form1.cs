@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 namespace ClothForm
 {
@@ -21,6 +22,7 @@ namespace ClothForm
         private float curAngleHorizontal;
         private float curAngleVertical;
         private float lastTime;
+        private int xSphere, ySphere, zSphere;
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +35,9 @@ namespace ClothForm
             mesh = false;
             curAngleHorizontal = 0;
             curAngleVertical = 0;
+            xSphere = 0;
+            ySphere = 0;
+            zSphere = 0;
             Bitmap image = new Bitmap(Image.FromFile("cloth.png"));
             textureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, textureID);
@@ -61,18 +66,14 @@ namespace ClothForm
             GL.DepthFunc(DepthFunction.Lequal);
             #endregion
             #region LIGHTING
-            float[] mat_specular = { 1.0f, 1.0f, 1.0f, 1.0f };
-            float[] mat_shininess = { 50.0f };
             float[] light_position = {1000.0f, 500.0f, 1000.0f, 100.0f};
             float[] light_ambient = {0.5f, 0.5f, 0.5f, 1.0f};
             float[] light_diffuze = {0.5f, 0.5f, 0.3f, 0.0f};
             GL.Light(LightName.Light0, LightParameter.Position, light_position);
             GL.Light(LightName.Light0, LightParameter.Ambient, light_ambient);
             GL.Light(LightName.Light0, LightParameter.Diffuse, light_diffuze);
-            //GL.Light();
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            //GL.Enable(EnableCap.Light1);
             GL.Enable(EnableCap.ColorMaterial);
             #endregion
             #region TEXTURING
@@ -124,7 +125,15 @@ namespace ClothForm
                 GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
             }
             GL.End();
-            drawSpehere(2 - 0.2, 100, 100);
+            GL.Material(MaterialFace.Front, MaterialParameter.Ambient, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+            GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+            GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.White);
+            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, 32.0f);
+            GL.Enable(EnableCap.CullFace);
+            drawSpehere(2 - 0.28, 100, 100, xSphere, ySphere, zSphere);
+            cloth.changePosistionSphere(new Vector3(xSphere, ySphere, zSphere));
+            GL.Disable(EnableCap.CullFace);
+            GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
             #endregion
         }
 
@@ -140,6 +149,15 @@ namespace ClothForm
                 curAngleHorizontal = (mouseX / (float)glControl1.Width) * MathHelper.DegreesToRadians(360);
                 curAngleVertical = (mouseY / (float)glControl1.Height) * MathHelper.DegreesToRadians(360);
             }
+            if(keys[(int)Keys.W])
+            {
+                zSphere -= 1;
+            }
+            if (keys[(int)Keys.S])
+            {
+                zSphere += 1;
+            }
+
         }
 
         private void glControl1_KeyDown(object sender, KeyEventArgs e)
@@ -168,6 +186,7 @@ namespace ClothForm
         private void glControl1_KeyUp(object sender, KeyEventArgs e)
         {
             keys[(int)e.KeyCode] = false;
+            
         }
 
         private void glControl1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -182,6 +201,7 @@ namespace ClothForm
             {
                 mouseDownLeft = false;
             }
+            
             
         }
 
@@ -219,24 +239,22 @@ namespace ClothForm
             //timer1.Stop();
         }
 
-        private void drawSpehere(double r, int nx, int ny)
+        private void drawSpehere(double r, int nx, int ny, int cX, int cY, int cZ)
         {
             int i, ix, iy;
             double x, y, z;
             for (iy = 0; iy < ny; ++iy) {
                 GL.Begin(PrimitiveType.QuadStrip);
                 for (ix = 0; ix <= nx; ++ix) {
-                    x = r * Math.Sin(iy * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx);
-                    y = r * Math.Sin(iy * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx);
-                    z = r * Math.Cos(iy * Math.PI / ny);
+                    x = r * Math.Sin(iy * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx) + cX;
+                    y = r * Math.Sin(iy * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx) + cY;
+                    z = r * Math.Cos(iy * Math.PI / ny) + cZ;
                     GL.Normal3(x, y, z);
-                    GL.TexCoord2((double)ix / (double)nx, (double)iy / (double)ny);
                     GL.Vertex3(x, y, z);
-                    x = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx);
-                    y = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx);
-                    z = r * Math.Cos((iy + 1) * Math.PI / ny);
+                    x = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Cos(2 * ix * Math.PI / nx) + cX;
+                    y = r * Math.Sin((iy + 1) * Math.PI / ny) * Math.Sin(2 * ix * Math.PI / nx) + cY;
+                    z = r * Math.Cos((iy + 1) * Math.PI / ny) + cZ;
                     GL.Normal3(x, y, z);
-                    GL.TexCoord2((double)ix / (double)nx, (double)(iy+1) / (double)ny);
                     GL.Vertex3(x, y, z);
                 }
                 GL.End();

@@ -14,6 +14,6 @@ namespace ClothForm
     }
     class Sphere
     {
-        
+ 
     }
 }
