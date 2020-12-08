@@ -153,7 +153,7 @@ namespace ClothForm
                 float curTime = timer.ElapsedMilliseconds / 1000.0f;
                 float delta = curTime - lastTime;
                 lastTime = curTime;
-                cloth.Simulate(delta);
+                cloth.simulate(delta);
             }
             if (mouseDownLeft) {
                 curAngleHorizontal = (mouseX / (float)glControl1.Width) * MathHelper.DegreesToRadians(360);
@@ -220,7 +220,7 @@ namespace ClothForm
 
         private void перезапуститьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cloth.Reset();
+            cloth.reset();
         }
 
         private void начатьToolStripMenuItem_Click(object sender, EventArgs e)

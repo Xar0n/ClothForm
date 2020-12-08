@@ -9,17 +9,17 @@ namespace ClothForm
         private Vertex vertex;
         private Particle particle;
         private Spring spring;
-        private const int SimScale = 1;
+        private const int simScale = 1;
         private const float minimumPhysicsDelta = 0.01f;
         //Размер тканевой сетки
         private const float clothScale = 20.0f; //10        
         //Значения данные каждой пружине
-        private float StretchStiffness = 2.5f * clothScale; //Жесткость при растяжении
-        private float BendStiffness = 1.0f * clothScale; //Жесткость при сгибании
-        private float mass = 0.01f * SimScale;
+        private float stretchStiffness = 2.5f * clothScale; //Жесткость при растяжении
+        private float bendStiffness = 1.0f * clothScale; //Жесткость при сгибании
+        private float mass = 0.01f * simScale;
         //Коэффициент демпфирования. Скорость умножается на это
         private float dampFactor = 0.9f;
-        public const int gridSize = 13 * SimScale;
+        public const int gridSize = 13 * simScale;
         private Spring_s[] springs;
         private Particle_s[] particles;
         private float timeSinceLastUpdate;
@@ -32,22 +32,22 @@ namespace ClothForm
         public Particle_s[] getParticles { get { return particles; } }
         public Cloth()
         {
-            gravity = new Vector3(0, -0.98f * SimScale, 0);
+            gravity = new Vector3(0, -0.98f * simScale, 0);
             particle = new Particle(gridSize, mass, clothScale);
             triangle = new Triangle(gridSize);
             vertex = new Vertex(gridSize);
-            spring = new Spring(gridSize,StretchStiffness, BendStiffness);
+            spring = new Spring(gridSize,stretchStiffness, bendStiffness);
             particles = particle.getParticles();
             springs = spring.getSprings();
-            this.InitMesh();
-            this.Reset();
+            this.initMesh();
+            this.reset();
         }
 
         public Cloth(float StretchStiffnessSpring, float BendStiffnessSpring, Vector3 grav)
         {
-            StretchStiffness = StretchStiffnessSpring * clothScale; //Жесткость при растяжении
-            BendStiffness = BendStiffnessSpring * clothScale; //Жесткость при сгибании
-            gravity = new Vector3(0, -0.98f * SimScale, 0);
+            stretchStiffness = StretchStiffnessSpring * clothScale; //Жесткость при растяжении
+            bendStiffness = BendStiffnessSpring * clothScale; //Жесткость при сгибании
+            gravity = new Vector3(0, -0.98f * simScale, 0);
             // Подсчитываем количество пружин
             // Есть пружина, указывающая вправо для каждого шара, который не находится на правом краю,
             // и пружина направлена ​​вниз для каждого шара не на нижнем крае
@@ -61,11 +61,11 @@ namespace ClothForm
             springCount += (gridSize - 2) * gridSize * 2;
             //Создание пространства для частиц и пружин
             springs = new Spring_s[springCount];
-            this.InitMesh();
-            this.Reset();
+            this.initMesh();
+            this.reset();
         }
 
-        private void InitMesh()
+        private void initMesh()
         {
             triangle.calculateSides();
             triangles = triangle.getTriangles();
@@ -73,7 +73,7 @@ namespace ClothForm
             vertices = vertex.getVertices();
         }
 
-        public void Reset()
+        public void reset()
         {
             particle.initInMesh();
             //Закрепляет верхнюю левую и верхнюю правую частицы на месте
@@ -83,17 +83,17 @@ namespace ClothForm
             //particle.pin(gridSize * (gridSize - 1));
             //particle.pin(gridSize * gridSize - 1);
             spring.init(particles);
-            UpdateMesh();
+            updateMesh();
         }
 
-        private void UpdateMesh()
+        private void updateMesh()
         {
             triangle.calculateNormals(getVertices);
             vertex.calculateNormal(getTriangles);
             vertex.calculatePosition(particles);
         }
 
-        public void Simulate(float deltaTime)
+        public void simulate(float deltaTime)
         {
             if (deltaTime <= 0) return;
             //Обновляет физику с интервалом в 10 мс, чтобы предотвратить проблемы с разной частотой кадров, вызывающие разное затухание
@@ -117,7 +117,7 @@ namespace ClothForm
                 }
                 particle.replaceCurrentNew();
             }
-            if (updateMade) UpdateMesh();
+            if (updateMade) updateMesh();
         }
 
         public void addSphere(Vector3 position, float radius)

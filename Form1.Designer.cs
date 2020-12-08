@@ -47,10 +47,14 @@ namespace ClothForm
             // 
             // glControl1
             // 
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.glControl1.Location = new System.Drawing.Point(0, 27);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(893, 534);
+            this.glControl1.Size = new System.Drawing.Size(1019, 552);
             this.glControl1.TabIndex = 0;
             this.glControl1.VSync = true;
             this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
@@ -74,7 +78,7 @@ namespace ClothForm
             this.видToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(893, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1019, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -90,14 +94,14 @@ namespace ClothForm
             // создатьТканьToolStripMenuItem
             // 
             this.создатьТканьToolStripMenuItem.Name = "создатьТканьToolStripMenuItem";
-            this.создатьТканьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.создатьТканьToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.создатьТканьToolStripMenuItem.Text = "Создать ткань";
             this.создатьТканьToolStripMenuItem.Click += new System.EventHandler(this.создатьТканьToolStripMenuItem_Click);
             // 
             // отчиститьToolStripMenuItem
             // 
             this.отчиститьToolStripMenuItem.Name = "отчиститьToolStripMenuItem";
-            this.отчиститьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.отчиститьToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.отчиститьToolStripMenuItem.Text = "Отчистить";
             this.отчиститьToolStripMenuItem.Click += new System.EventHandler(this.отчиститьToolStripMenuItem_Click);
             // 
@@ -150,7 +154,7 @@ namespace ClothForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(893, 619);
+            this.ClientSize = new System.Drawing.Size(1019, 580);
             this.Controls.Add(this.glControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
