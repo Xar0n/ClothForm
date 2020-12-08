@@ -14,6 +14,7 @@ namespace ClothForm
     }
     class Particle
     {
+        private static int particleCount;
         private int gridSize;
         private Particle_s[] particles;
         private float mass;
@@ -21,7 +22,7 @@ namespace ClothForm
         public Particle(int gridSize, float mass, float clothScale)
         {
             this.gridSize = gridSize;
-            int particleCount = gridSize * gridSize;
+            particleCount = gridSize * gridSize;
             particles = new Particle_s[particleCount];
             this.mass = mass;
             this.clothScale = clothScale;
@@ -106,6 +107,11 @@ namespace ClothForm
         public Particle_s[] getParticles()
         {
             return particles;
+        }
+
+        public static int getCount()
+        {
+            return particleCount;
         }
     }
 }

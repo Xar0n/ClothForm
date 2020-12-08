@@ -22,7 +22,7 @@ namespace ClothForm
         private float curAngleHorizontal;
         private float curAngleVertical;
         private float lastTime;
-        private int xSphere, ySphere, zSphere;
+        private float xSphere, ySphere, zSphere, rSphere;
         public Form1()
         {
             InitializeComponent();
@@ -38,6 +38,7 @@ namespace ClothForm
             xSphere = 0;
             ySphere = 0;
             zSphere = 0;
+            rSphere = 2;
             Bitmap image = new Bitmap(Image.FromFile("cloth.png"));
             textureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, textureID);
@@ -106,12 +107,12 @@ namespace ClothForm
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             }
+
             GL.Begin(PrimitiveType.Triangles);
-            foreach (var t in cloth.triangles)
-            {
-                var A = cloth.vertices[t.A];
-                var B = cloth.vertices[t.B];
-                var C = cloth.vertices[t.C];
+            foreach (var t in cloth.getTriangles) {
+                var A = cloth.getVertices[t.A];
+                var B = cloth.getVertices[t.B];
+                var C = cloth.getVertices[t.C];
                 if (!mesh) GL.Color4(Color.White);
                 else GL.Color4(Color.Red);
                 GL.Normal3(A.normal.X, A.normal.Y, A.normal.Z);
@@ -125,15 +126,24 @@ namespace ClothForm
                 GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
             }
             GL.End();
+            GL.Enable(EnableCap.Lighting);
             GL.Material(MaterialFace.Front, MaterialParameter.Ambient, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
             GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
             GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.White);
             GL.Material(MaterialFace.Front, MaterialParameter.Shininess, 32.0f);
             GL.Enable(EnableCap.CullFace);
-            drawSpehere(2 - 0.28, 100, 100, xSphere, ySphere, zSphere);
+            drawSpehere(rSphere - 0.5, 100, 100, xSphere, ySphere, zSphere);
             cloth.changePosistionSphere(new Vector3(xSphere, ySphere, zSphere));
             GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.Lighting);
             GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
+            GL.PointSize(5f);
+            GL.Color3(1.0f, 0.0f, 0.0f);
+            GL.Begin(PrimitiveType.Points);
+            foreach(var p in cloth.getParticles) {
+                GL.Vertex3(p.currentPosition);
+            }
+            GL.End();
             #endregion
         }
 
@@ -151,11 +161,11 @@ namespace ClothForm
             }
             if(keys[(int)Keys.W])
             {
-                zSphere -= 1;
+                zSphere -= 0.5f;
             }
             if (keys[(int)Keys.S])
             {
-                zSphere += 1;
+                zSphere += 0.5f;
             }
 
         }
@@ -201,8 +211,6 @@ namespace ClothForm
             {
                 mouseDownLeft = false;
             }
-            
-            
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -231,7 +239,7 @@ namespace ClothForm
             timer1.Interval = 1000 / 60;
             timer1.Enabled = true;
             cloth = new Cloth();
-            cloth.addSphere(Vector3.Zero, 2);
+            cloth.addSphere(Vector3.Zero, rSphere);
         }
 
         private void отчиститьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -239,7 +247,7 @@ namespace ClothForm
             //timer1.Stop();
         }
 
-        private void drawSpehere(double r, int nx, int ny, int cX, int cY, int cZ)
+        private void drawSpehere(double r, int nx, int ny, float cX, float cY, float cZ)
         {
             int i, ix, iy;
             double x, y, z;

@@ -24,11 +24,12 @@ namespace ClothForm
         private Particle_s[] particles;
         private float timeSinceLastUpdate;
         private Vector3 gravity;
-        private Sphere_s _colliders = new Sphere_s();
-        private Vertex_s[] _vertices;
-        public Vertex_s[] vertices { get { return _vertices; } }
-        private Triangle_s[] _triangles;
-        public Triangle_s[] triangles { get { return _triangles; } }
+        private Sphere_s sphere = new Sphere_s();
+        private Vertex_s[] vertices;
+        public Vertex_s[] getVertices { get { return vertices; } }
+        private Triangle_s[] triangles;
+        public Triangle_s[] getTriangles { get { return triangles; } }
+        public Particle_s[] getParticles { get { return particles; } }
         public Cloth()
         {
             gravity = new Vector3(0, -0.98f * SimScale, 0);
@@ -67,9 +68,9 @@ namespace ClothForm
         private void InitMesh()
         {
             triangle.calculateSides();
-            _triangles = triangle.getTriangles();
+            triangles = triangle.getTriangles();
             vertex.calculateVertices();
-            _vertices = vertex.getVertices();
+            vertices = vertex.getVertices();
         }
 
         public void Reset()
@@ -87,8 +88,8 @@ namespace ClothForm
 
         private void UpdateMesh()
         {
-            triangle.calculateNormals(vertices);
-            vertex.calculateNormal(triangles);
+            triangle.calculateNormals(getVertices);
+            vertex.calculateNormal(getTriangles);
             vertex.calculatePosition(particles);
         }
 
@@ -111,7 +112,7 @@ namespace ClothForm
                     particles[i].nextVelocity *= dampFactor;
                     force = particles[i].nextVelocity * timePassedInSeconds;
                     particles[i].nextPosition = particles[i].currentPosition + force;
-                    particle.checkSphere(_colliders, i);
+                    particle.checkSphere(sphere, i);
                     particle.checkFloor(i);
                 }
                 particle.replaceCurrentNew();
@@ -122,12 +123,12 @@ namespace ClothForm
         public void addSphere(Vector3 position, float radius)
         {
             var col = new Sphere_s(position, radius);
-            _colliders = col;
+            sphere = col;
         }
 
         public void changePosistionSphere(Vector3 position)
         {
-            _colliders.Position = position;
+            sphere.Position = position;
         }
 
         public void pinParticle(int index)

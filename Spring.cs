@@ -1,5 +1,4 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 namespace ClothForm
 {
     public struct Spring_s
