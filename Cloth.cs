@@ -30,6 +30,7 @@ namespace ClothForm
         private Triangle_s[] triangles;
         public Triangle_s[] getTriangles { get { return triangles; } }
         public Particle_s[] getParticles { get { return particles; } }
+        public Spring_s[] getSprings { get { return springs; } }
         public Cloth()
         {
             gravity = new Vector3(0, -0.98f * simScale, 0);

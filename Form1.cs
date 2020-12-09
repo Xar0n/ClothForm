@@ -15,7 +15,6 @@ namespace ClothForm
         private static bool mouseDownLeft;
         private static bool runSim;
         private static bool[] keys = new bool[256];
-        private static bool mesh;
         private static Stopwatch timer = new Stopwatch();
         private Cloth cloth;
         private int textureID;
@@ -32,7 +31,6 @@ namespace ClothForm
         {
             runSim = false;
             mouseDownLeft = false;
-            mesh = false;
             curAngleHorizontal = 0;
             curAngleVertical = 0;
             xSphere = 0;
@@ -103,26 +101,20 @@ namespace ClothForm
             GL.LoadMatrix(ref lookMat);
             #endregion
             #region RENDERING
-            if (mesh)
-            {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-            }
-
             GL.Begin(PrimitiveType.Triangles);
             foreach (var t in cloth.getTriangles) {
                 var A = cloth.getVertices[t.A];
                 var B = cloth.getVertices[t.B];
                 var C = cloth.getVertices[t.C];
-                if (!mesh) GL.Color4(Color.White);
-                else GL.Color4(Color.Red);
+                GL.Color4(Color.White);
                 GL.Normal3(A.normal.X, A.normal.Y, A.normal.Z);
-                if (!mesh) GL.TexCoord2(A.uv.X, A.uv.Y);
+                GL.TexCoord2(A.uv.X, A.uv.Y);
                 GL.Vertex3(A.position.X, A.position.Y, A.position.Z);
                 GL.Normal3(B.normal.X, B.normal.Y, B.normal.Z);
-                if (!mesh) GL.TexCoord2(B.uv.X, B.uv.Y);
+                GL.TexCoord2(B.uv.X, B.uv.Y);
                 GL.Vertex3(B.position.X, B.position.Y, B.position.Z);
                 GL.Normal3(C.normal.X, C.normal.Y, C.normal.Z);
-                if (!mesh) GL.TexCoord2(C.uv.X, C.uv.Y);
+                GL.TexCoord2(C.uv.X, C.uv.Y);
                 GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
             }
             GL.End();
@@ -137,13 +129,22 @@ namespace ClothForm
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.Lighting);
             GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
-            GL.PointSize(5f);
+            GL.PointSize(8f);
             GL.Color3(1.0f, 0.0f, 0.0f);
             GL.Begin(PrimitiveType.Points);
-            foreach(var p in cloth.getParticles) {
-                GL.Vertex3(p.currentPosition);
+            foreach(var p in cloth.getVertices) {
+                GL.Vertex3(p.position);
             }
             GL.End();
+            GL.Color3(0.0f, 0.0f, 1.0f);
+            GL.LineWidth(4f);
+            GL.Begin(PrimitiveType.Lines);
+            foreach (var p in cloth.getSprings)
+            {
+                GL.Vertex3(cloth.getVertices[p.P1].position);
+                GL.Vertex3(cloth.getVertices[p.P2].position);
+            }
+            GL.End();        
             #endregion
         }
 
