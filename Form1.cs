@@ -22,6 +22,7 @@ namespace ClothForm
         private float curAngleVertical;
         private float lastTime;
         private float xSphere, ySphere, zSphere, rSphere;
+        private static bool dMesh, dPoints, dSprings, dSphere;
         public Form1()
         {
             InitializeComponent();
@@ -36,7 +37,7 @@ namespace ClothForm
             xSphere = 0;
             ySphere = 0;
             zSphere = 0;
-            rSphere = 2;
+            rSphere = 6;
             Bitmap image = new Bitmap(Image.FromFile("cloth.png"));
             textureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, textureID);
@@ -44,6 +45,16 @@ namespace ClothForm
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             image.UnlockBits(data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            dMesh = false;
+            dPoints = false;
+            dSprings = false;
+            dSphere = false;
+            timer1.Interval = 1000 / 60;
+            timer1.Enabled = true;
+            showToolStripMenuItem.Enabled = false;
+            simulationToolStripMenuItem.Enabled = false;
+            createSphereToolStripMenuItem.Enabled = false;
+            clearToolStripMenuItem.Enabled = false;
         }
         
         [STAThread]
@@ -101,50 +112,58 @@ namespace ClothForm
             GL.LoadMatrix(ref lookMat);
             #endregion
             #region RENDERING
-            GL.Begin(PrimitiveType.Triangles);
-            foreach (var t in cloth.getTriangles) {
-                var A = cloth.getVertices[t.A];
-                var B = cloth.getVertices[t.B];
-                var C = cloth.getVertices[t.C];
+            if (dMesh) {
+                GL.Begin(PrimitiveType.Triangles);
+                foreach (var t in cloth.getTriangles) {
+                    var A = cloth.getVertices[t.A];
+                    var B = cloth.getVertices[t.B];
+                    var C = cloth.getVertices[t.C];
+                    GL.Color4(Color.White);
+                    GL.Normal3(A.normal.X, A.normal.Y, A.normal.Z);
+                    GL.TexCoord2(A.uv.X, A.uv.Y);
+                    GL.Vertex3(A.position.X, A.position.Y, A.position.Z);
+                    GL.Normal3(B.normal.X, B.normal.Y, B.normal.Z);
+                    GL.TexCoord2(B.uv.X, B.uv.Y);
+                    GL.Vertex3(B.position.X, B.position.Y, B.position.Z);
+                    GL.Normal3(C.normal.X, C.normal.Y, C.normal.Z);
+                    GL.TexCoord2(C.uv.X, C.uv.Y);
+                    GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
+                }
+                GL.End();
+            }
+            if (dSphere) {
                 GL.Color4(Color.White);
-                GL.Normal3(A.normal.X, A.normal.Y, A.normal.Z);
-                GL.TexCoord2(A.uv.X, A.uv.Y);
-                GL.Vertex3(A.position.X, A.position.Y, A.position.Z);
-                GL.Normal3(B.normal.X, B.normal.Y, B.normal.Z);
-                GL.TexCoord2(B.uv.X, B.uv.Y);
-                GL.Vertex3(B.position.X, B.position.Y, B.position.Z);
-                GL.Normal3(C.normal.X, C.normal.Y, C.normal.Z);
-                GL.TexCoord2(C.uv.X, C.uv.Y);
-                GL.Vertex3(C.position.X, C.position.Y, C.position.Z);
+                GL.Enable(EnableCap.Lighting);
+                GL.Material(MaterialFace.Front, MaterialParameter.Ambient, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+                GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+                GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.White);
+                GL.Material(MaterialFace.Front, MaterialParameter.Shininess, 32.0f);
+                GL.Enable(EnableCap.CullFace);
+                drawSpehere(rSphere - 0.5, 100, 100, xSphere, ySphere, zSphere);
+                cloth.changePosistionSphere(new Vector3(xSphere, ySphere, zSphere));
+                GL.Disable(EnableCap.CullFace);
+                GL.Disable(EnableCap.Lighting);
             }
-            GL.End();
-            GL.Enable(EnableCap.Lighting);
-            GL.Material(MaterialFace.Front, MaterialParameter.Ambient, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
-            GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
-            GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.White);
-            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, 32.0f);
-            GL.Enable(EnableCap.CullFace);
-            drawSpehere(rSphere - 0.5, 100, 100, xSphere, ySphere, zSphere);
-            cloth.changePosistionSphere(new Vector3(xSphere, ySphere, zSphere));
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.Lighting);
-            GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
-            GL.PointSize(8f);
-            GL.Color3(1.0f, 0.0f, 0.0f);
-            GL.Begin(PrimitiveType.Points);
-            foreach(var p in cloth.getVertices) {
-                GL.Vertex3(p.position);
+            if (dPoints) {
+                GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
+                GL.PointSize(8f);
+                GL.Color3(1.0f, 0.0f, 0.0f);
+                GL.Begin(PrimitiveType.Points);
+                foreach (var p in cloth.getVertices) {
+                    GL.Vertex3(p.position);
+                }
+                GL.End();
             }
-            GL.End();
-            GL.Color3(0.0f, 0.0f, 1.0f);
-            GL.LineWidth(4f);
-            GL.Begin(PrimitiveType.Lines);
-            foreach (var p in cloth.getSprings)
-            {
-                GL.Vertex3(cloth.getVertices[p.P1].position);
-                GL.Vertex3(cloth.getVertices[p.P2].position);
+            if (dSprings) {
+                GL.Color3(0.0f, 0.0f, 1.0f);
+                GL.LineWidth(4f);
+                GL.Begin(PrimitiveType.Lines);
+                foreach (var p in cloth.getSprings) {
+                    GL.Vertex3(cloth.getVertices[p.P1].position);
+                    GL.Vertex3(cloth.getVertices[p.P2].position);
+                }
+                GL.End();
             }
-            GL.End();        
             #endregion
         }
 
@@ -214,38 +233,68 @@ namespace ClothForm
             }
         }
 
+        private void showPointsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dPoints = !dPoints;
+            showPointsToolStripMenuItem.Checked = dPoints;
+        }
+
+        private void showSpringsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dSprings = !dSprings;
+            showSpringsToolStripMenuItem.Checked = dSprings;
+        }
+
+        private void showMeshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dMesh = !dMesh;
+            showMeshToolStripMenuItem.Checked = dMesh;
+        }
+
+        private void параметрыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void glControl1_Resize(object sender, EventArgs e)
         {
             GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
         }
 
-        private void перезапуститьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void rebootToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cloth.reset();
         }
 
-        private void начатьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void startSimToolStripMenuItem_Click(object sender, EventArgs e)
         {
             runSim = !runSim;
             if(runSim) {
+                startSimToolStripMenuItem.Text = "Закончить";
                 lastTime = timer.ElapsedMilliseconds / 1000.0f;//Перенести
                 timer.Start();
             } else {
+                startSimToolStripMenuItem.Text = "Запустить";
                 timer.Stop();
             }
         }
 
-        private void создатьТканьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void createMeshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            timer1.Interval = 1000 / 60;
-            timer1.Enabled = true;
             cloth = new Cloth();
             cloth.addSphere(Vector3.Zero, rSphere);
+            showToolStripMenuItem.Enabled = true;
+            simulationToolStripMenuItem.Enabled = true;
+            createSphereToolStripMenuItem.Enabled = true;
+            clearToolStripMenuItem.Enabled = true;
+            dMesh = true;
+            showMeshToolStripMenuItem.Checked = dMesh;
+            dSphere = true;
         }
 
-        private void отчиститьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //timer1.Stop();
+            
         }
 
         private void drawSpehere(double r, int nx, int ny, float cX, float cY, float cZ)
