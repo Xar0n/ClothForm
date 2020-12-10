@@ -53,11 +53,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cloth.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="FAboutProgram.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FAboutProgram.Designer.cs">
+      <DependentUpon>FAboutProgram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FHelp.Designer.cs">
+      <DependentUpon>FHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FMain.Designer.cs">
+      <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Particle.cs" />
     <Compile Include="Program.cs" />
@@ -66,8 +78,14 @@
     <Compile Include="Spring.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="Vertex.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="FAboutProgram.resx">
+      <DependentUpon>FAboutProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FHelp.resx">
+      <DependentUpon>FHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FMain.resx">
+      <DependentUpon>FMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

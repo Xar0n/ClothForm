@@ -8,9 +8,11 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 namespace ClothForm
 {
-    public partial class Form1 : Form
+    public partial class FMain : Form
     {
         private static int mouseX;
+        private FAboutProgram fAboutProgram;
+        private FHelp fHelp;
         private static int mouseY;
         private static bool mouseDownLeft;
         private static bool runSim;
@@ -23,7 +25,7 @@ namespace ClothForm
         private float lastTime;
         private float xSphere, ySphere, zSphere, rSphere;
         private static bool dMesh, dPoints, dSprings, dSphere;
-        public Form1()
+        public FMain()
         {
             InitializeComponent();
         }
@@ -50,11 +52,6 @@ namespace ClothForm
             dSprings = false;
             dSphere = false;
             timer1.Interval = 1000 / 60;
-            timer1.Enabled = true;
-            showToolStripMenuItem.Enabled = false;
-            simulationToolStripMenuItem.Enabled = false;
-            createSphereToolStripMenuItem.Enabled = false;
-            clearToolStripMenuItem.Enabled = false;
         }
         
         [STAThread]
@@ -254,6 +251,27 @@ namespace ClothForm
         private void параметрыToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void aboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fAboutProgram.ShowDialog();
+        }
+
+        private void FMain_Load(object sender, EventArgs e)
+        {
+            timer1.Enabled = true;
+            showToolStripMenuItem.Enabled = false;
+            simulationToolStripMenuItem.Enabled = false;
+            createSphereToolStripMenuItem.Enabled = false;
+            clearToolStripMenuItem.Enabled = false;
+            fAboutProgram = new FAboutProgram();
+            fHelp = new FHelp();
+        }
+
+        private void controlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fHelp.ShowDialog();
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
