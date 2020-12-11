@@ -14,8 +14,9 @@ namespace ClothForm
         private FAboutProgram fAboutProgram;
         private FHelp fHelp;
         private FGravity fGravity;
+        private FSprings fSprings;
         private static int mouseY;
-        private static bool mouseDownLeft;
+        private static bool mouseDownRight;
         private static bool runSim;
         private static bool[] keys = new bool[256];
         private static Stopwatch timer = new Stopwatch();
@@ -34,7 +35,7 @@ namespace ClothForm
         private void glControl1_Load(object sender, EventArgs e)
         {
             runSim = false;
-            mouseDownLeft = false;
+            mouseDownRight = false;
             curAngleHorizontal = 0;
             curAngleVertical = 0;
             xSphere = 0;
@@ -173,7 +174,7 @@ namespace ClothForm
                 lastTime = curTime;
                 cloth.simulate(delta);
             }
-            if (mouseDownLeft) {
+            if (mouseDownRight) {
                 curAngleHorizontal = (mouseX / (float)glControl1.Width) * MathHelper.DegreesToRadians(360);
                 curAngleVertical = (mouseY / (float)glControl1.Height) * MathHelper.DegreesToRadians(360);
             }
@@ -202,7 +203,7 @@ namespace ClothForm
         {
             if (e.Button == MouseButtons.Left)
             {
-                mouseDownLeft = true;
+                mouseDownRight = true;
             }
         }
 
@@ -227,7 +228,7 @@ namespace ClothForm
         {
             if (e.Button == MouseButtons.Left)
             {
-                mouseDownLeft = false;
+                mouseDownRight = false;
             }
         }
 
@@ -269,6 +270,7 @@ namespace ClothForm
             fAboutProgram = new FAboutProgram();
             fHelp = new FHelp();
             fGravity = new FGravity();
+            fSprings = new FSprings();
         }
 
         private void controlToolStripMenuItem_Click(object sender, EventArgs e)
@@ -279,6 +281,11 @@ namespace ClothForm
         private void gravityToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fGravity.ShowDialog();
+        }
+
+        private void springsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fSprings.ShowDialog();
         }
 
         private void glControl1_Resize(object sender, EventArgs e)

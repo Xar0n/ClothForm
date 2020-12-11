@@ -168,6 +168,7 @@ namespace ClothForm
             this.springsToolStripMenuItem.Name = "springsToolStripMenuItem";
             this.springsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.springsToolStripMenuItem.Text = "Пружины";
+            this.springsToolStripMenuItem.Click += new System.EventHandler(this.springsToolStripMenuItem_Click);
             // 
             // showToolStripMenuItem
             // 
@@ -183,21 +184,21 @@ namespace ClothForm
             // 
             this.showPointsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.showPointsToolStripMenuItem.Name = "showPointsToolStripMenuItem";
-            this.showPointsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showPointsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.showPointsToolStripMenuItem.Text = "Точки";
             this.showPointsToolStripMenuItem.Click += new System.EventHandler(this.showPointsToolStripMenuItem_Click);
             // 
             // showSpringsToolStripMenuItem
             // 
             this.showSpringsToolStripMenuItem.Name = "showSpringsToolStripMenuItem";
-            this.showSpringsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showSpringsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.showSpringsToolStripMenuItem.Text = "Пружины";
             this.showSpringsToolStripMenuItem.Click += new System.EventHandler(this.showSpringsToolStripMenuItem_Click);
             // 
             // showMeshToolStripMenuItem
             // 
             this.showMeshToolStripMenuItem.Name = "showMeshToolStripMenuItem";
-            this.showMeshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showMeshToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.showMeshToolStripMenuItem.Text = "Текстура";
             this.showMeshToolStripMenuItem.Click += new System.EventHandler(this.showMeshToolStripMenuItem_Click);
             // 

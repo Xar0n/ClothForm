@@ -35,14 +35,15 @@ namespace ClothForm
 
         private void checkDigit(System.Windows.Forms.KeyPressEventArgs e)
         {
-            if (Char.IsNumber(e.KeyChar) | (e.KeyChar == Convert.ToChar(",")) | e.KeyChar == '\b') return;
+            if (Char.IsNumber(e.KeyChar) | (e.KeyChar == Convert.ToChar(",")) | (e.KeyChar == Convert.ToChar("-")) | e.KeyChar == '\b') return;
             else
                 e.Handled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FMain.cloth.gravity = new Vector3();
+            FMain.cloth.gravity = new Vector3(float.Parse(textBox1.Text), float.Parse(textBox2.Text), float.Parse(textBox3.Text));
+            this.Close();
         }
     }
 }

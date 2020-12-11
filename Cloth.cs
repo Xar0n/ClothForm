@@ -136,5 +136,24 @@ namespace ClothForm
         {
             particle.pin(index);
         }
+
+        public void setStretchStiffness(float koef)
+        {
+            stretchStiffness = koef * clothScale;
+        }
+
+        public void setBendStiffness(float koef)
+        {
+            bendStiffness = koef * clothScale;
+        }
+
+        public float getStretchStiffness()
+        {
+            return (stretchStiffness / clothScale);
+        }
+        public float getBendStiffness()
+        {
+            return (bendStiffness / clothScale);
+        }
     }
 }
