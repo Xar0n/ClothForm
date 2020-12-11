@@ -13,12 +13,13 @@ namespace ClothForm
         private static int mouseX;
         private FAboutProgram fAboutProgram;
         private FHelp fHelp;
+        private FGravity fGravity;
         private static int mouseY;
         private static bool mouseDownLeft;
         private static bool runSim;
         private static bool[] keys = new bool[256];
         private static Stopwatch timer = new Stopwatch();
-        private Cloth cloth;
+        public static Cloth cloth;
         private int textureID;
         private float curAngleHorizontal;
         private float curAngleVertical;
@@ -248,7 +249,7 @@ namespace ClothForm
             showMeshToolStripMenuItem.Checked = dMesh;
         }
 
-        private void параметрыToolStripMenuItem_Click(object sender, EventArgs e)
+        private void paramsToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
@@ -267,11 +268,17 @@ namespace ClothForm
             clearToolStripMenuItem.Enabled = false;
             fAboutProgram = new FAboutProgram();
             fHelp = new FHelp();
+            fGravity = new FGravity();
         }
 
         private void controlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fHelp.ShowDialog();
+        }
+
+        private void gravityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fGravity.ShowDialog();
         }
 
         private void glControl1_Resize(object sender, EventArgs e)

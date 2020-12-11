@@ -41,8 +41,8 @@ namespace ClothForm
             this.startSimToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.гравитацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.пружиныToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gravityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.springsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showPointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSpringsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,38 +135,39 @@ namespace ClothForm
             // startSimToolStripMenuItem
             // 
             this.startSimToolStripMenuItem.Name = "startSimToolStripMenuItem";
-            this.startSimToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.startSimToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.startSimToolStripMenuItem.Text = "Запустить";
             this.startSimToolStripMenuItem.Click += new System.EventHandler(this.startSimToolStripMenuItem_Click);
             // 
             // rebootToolStripMenuItem
             // 
             this.rebootToolStripMenuItem.Name = "rebootToolStripMenuItem";
-            this.rebootToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.rebootToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rebootToolStripMenuItem.Text = "Перезапустить";
             this.rebootToolStripMenuItem.Click += new System.EventHandler(this.rebootToolStripMenuItem_Click);
             // 
             // параметрыToolStripMenuItem
             // 
             this.параметрыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.гравитацияToolStripMenuItem,
-            this.пружиныToolStripMenuItem});
+            this.gravityToolStripMenuItem,
+            this.springsToolStripMenuItem});
             this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.параметрыToolStripMenuItem.Text = "Параметры";
-            this.параметрыToolStripMenuItem.Click += new System.EventHandler(this.параметрыToolStripMenuItem_Click);
+            this.параметрыToolStripMenuItem.Click += new System.EventHandler(this.paramsToolStripMenuItem_Click);
             // 
-            // гравитацияToolStripMenuItem
+            // gravityToolStripMenuItem
             // 
-            this.гравитацияToolStripMenuItem.Name = "гравитацияToolStripMenuItem";
-            this.гравитацияToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.гравитацияToolStripMenuItem.Text = "Гравитация";
+            this.gravityToolStripMenuItem.Name = "gravityToolStripMenuItem";
+            this.gravityToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gravityToolStripMenuItem.Text = "Гравитация";
+            this.gravityToolStripMenuItem.Click += new System.EventHandler(this.gravityToolStripMenuItem_Click);
             // 
-            // пружиныToolStripMenuItem
+            // springsToolStripMenuItem
             // 
-            this.пружиныToolStripMenuItem.Name = "пружиныToolStripMenuItem";
-            this.пружиныToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.пружиныToolStripMenuItem.Text = "Пружины";
+            this.springsToolStripMenuItem.Name = "springsToolStripMenuItem";
+            this.springsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.springsToolStripMenuItem.Text = "Пружины";
             // 
             // showToolStripMenuItem
             // 
@@ -182,21 +183,21 @@ namespace ClothForm
             // 
             this.showPointsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.showPointsToolStripMenuItem.Name = "showPointsToolStripMenuItem";
-            this.showPointsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showPointsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showPointsToolStripMenuItem.Text = "Точки";
             this.showPointsToolStripMenuItem.Click += new System.EventHandler(this.showPointsToolStripMenuItem_Click);
             // 
             // showSpringsToolStripMenuItem
             // 
             this.showSpringsToolStripMenuItem.Name = "showSpringsToolStripMenuItem";
-            this.showSpringsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showSpringsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showSpringsToolStripMenuItem.Text = "Пружины";
             this.showSpringsToolStripMenuItem.Click += new System.EventHandler(this.showSpringsToolStripMenuItem_Click);
             // 
             // showMeshToolStripMenuItem
             // 
             this.showMeshToolStripMenuItem.Name = "showMeshToolStripMenuItem";
-            this.showMeshToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showMeshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showMeshToolStripMenuItem.Text = "Текстура";
             this.showMeshToolStripMenuItem.Click += new System.EventHandler(this.showMeshToolStripMenuItem_Click);
             // 
@@ -212,14 +213,14 @@ namespace ClothForm
             // управлениеToolStripMenuItem
             // 
             this.управлениеToolStripMenuItem.Name = "управлениеToolStripMenuItem";
-            this.управлениеToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.управлениеToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.управлениеToolStripMenuItem.Text = "Управление";
             this.управлениеToolStripMenuItem.Click += new System.EventHandler(this.controlToolStripMenuItem_Click);
             // 
             // aboutProgramToolStripMenuItem
             // 
             this.aboutProgramToolStripMenuItem.Name = "aboutProgramToolStripMenuItem";
-            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.aboutProgramToolStripMenuItem.Text = "О программе";
             this.aboutProgramToolStripMenuItem.Click += new System.EventHandler(this.aboutProgramToolStripMenuItem_Click);
             // 
@@ -257,8 +258,8 @@ namespace ClothForm
         private System.Windows.Forms.ToolStripMenuItem showSpringsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showMeshToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem гравитацияToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem пружиныToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gravityToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem springsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createSphereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem помощьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem управлениеToolStripMenuItem;

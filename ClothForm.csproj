@@ -59,6 +59,12 @@
     <Compile Include="FAboutProgram.Designer.cs">
       <DependentUpon>FAboutProgram.cs</DependentUpon>
     </Compile>
+    <Compile Include="FGravity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FGravity.Designer.cs">
+      <DependentUpon>FGravity.cs</DependentUpon>
+    </Compile>
     <Compile Include="FHelp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="Vertex.cs" />
     <EmbeddedResource Include="FAboutProgram.resx">
       <DependentUpon>FAboutProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FGravity.resx">
+      <DependentUpon>FGravity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FHelp.resx">
       <DependentUpon>FHelp.cs</DependentUpon>

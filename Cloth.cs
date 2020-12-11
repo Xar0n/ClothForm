@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClothForm
 {
-    class Cloth
+    public class Cloth
     {
         private Triangle triangle;
         private Vertex vertex;
@@ -23,7 +23,7 @@ namespace ClothForm
         private Spring_s[] springs;
         private Particle_s[] particles;
         private float timeSinceLastUpdate;
-        private Vector3 gravity;
+        public Vector3 gravity;
         private Sphere_s sphere = new Sphere_s();
         private Vertex_s[] vertices;
         public Vertex_s[] getVertices { get { return vertices; } }
