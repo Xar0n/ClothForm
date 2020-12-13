@@ -12,21 +12,23 @@ namespace ClothForm
     {
         private int gridSize;
         private Vertex_s[] vertices;
+        private int vertexCount;
         public Vertex(int gridSize)
         {
             this.gridSize = gridSize;
+            vertexCount = (gridSize * gridSize);
         }
 
         public void calculateVertices()
         {
-            int vertexCount = (gridSize * gridSize);
+            int k;
             vertices = new Vertex_s[vertexCount];
             for (int j = 0; j < gridSize; j++)
             {
                 for (int i = 0; i < gridSize; i++)
                 {
-                    int ballID = j * gridSize + i;
-                    vertices[ballID].uv = new Vector2(i / (float)gridSize, j / (float)gridSize);
+                    k = j * gridSize + i;
+                    vertices[k].uv = new Vector2(i / (float)gridSize, j / (float)gridSize);
                 }
             }
         }

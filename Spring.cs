@@ -27,18 +27,9 @@ namespace ClothForm
         public Spring(int gridSize, float StretchStiffness, float BendStiffness)
         {
             this.gridSize = gridSize;
-            // Подсчитываем количество пружин
-            // Есть пружина, указывающая вправо для каждого шара, который не находится на правом краю,
-            // и пружина направлена ​​вниз для каждого шара не на нижнем крае
             int springCount = (gridSize - 1) * gridSize * 2;
-            // Пружина направлена ​​вниз и вправо для каждого шара не снизу или справа, 
-            //и одна пружина направлена ​​вниз и влево для каждого шара не снизу или слева
             springCount += (gridSize - 1) * (gridSize - 1) * 2;
-            // Имеется пружина, указывающая вправо (к следующему, кроме одного шара) 
-            //для каждого шара, который не находится на правом краю или рядом с ним, 
-            //и одна направленная вниз для каждого шара, не находящегося на нижнем крае или рядом с ним
             springCount += (gridSize - 2) * gridSize * 2;
-            //Создание пространства для частиц и пружин
             springs = new Spring_s[springCount];
             this.StretchStiffness = StretchStiffness;
             this.BendStiffness = BendStiffness;

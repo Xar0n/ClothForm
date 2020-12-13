@@ -1,5 +1,4 @@
 ﻿using OpenTK;
-using System.Collections.Generic;
 namespace ClothForm
 {
     public struct Particle_s
@@ -88,8 +87,8 @@ namespace ClothForm
         public void checkFloor(int index)
         {
             Vector3 P = particles[index].nextPosition;
-            if (P.Y < -8.5f) {
-                particles[index].nextPosition.Y = -8.5f;
+            if (P.Y < -9f) {
+                particles[index].nextPosition.Y = -9f;
                 particles[index].nextVelocity = Vector3.Zero;
             }
         }

@@ -92,18 +92,13 @@ namespace ClothForm
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             #endregion
             #region PROJECTION MATRIX
-            float fov = MathHelper.DegreesToRadians(60);
-            float aspect = glControl1.Width / (float)glControl1.Height;
-            float zNear = 0.1f;
-            float zFar = 500;
-            var projMat = Matrix4.CreatePerspectiveFieldOfView(fov, aspect, zNear, zFar);
+            var projMat = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(60), glControl1.Width / (float)glControl1.Height, 0.1f, 500);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projMat);
             #endregion
             #region CAMERA MATRIX
             GL.MatrixMode(MatrixMode.Modelview);
-            var camPos = new Vector3(0, 15, 25);
-            var lookMat = Matrix4.LookAt(camPos, Vector3.Zero, Vector3.UnitY);
+            var lookMat = Matrix4.LookAt(new Vector3(0, 15, 25), Vector3.Zero, Vector3.UnitY);
             var modelMat = Matrix4.CreateRotationY(curAngleHorizontal);
             lookMat = modelMat * lookMat;
             modelMat = Matrix4.CreateRotationZ(curAngleVertical);

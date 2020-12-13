@@ -15,7 +15,7 @@ namespace ClothForm
         private const float clothScale = 20.0f; //10        
         //Значения данные каждой пружине
         private float stretchStiffness = 2.5f * clothScale; //Жесткость при растяжении
-        private float bendStiffness = 1.0f * clothScale; //Жесткость при сгибании
+        private float bendStiffness = 1.0f * clothScale; //Жесткость при изгибе
         private float mass = 0.01f * simScale;
         //Коэффициент демпфирования. Скорость умножается на это
         private float dampFactor = 0.9f;
