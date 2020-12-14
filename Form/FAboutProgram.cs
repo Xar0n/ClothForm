@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ClothForm
 {
-    public partial class FAboutProgram : Form
+    public partial class FAboutProgram : System.Windows.Forms.Form
     {
         public FAboutProgram()
         {

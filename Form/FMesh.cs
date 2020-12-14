@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClothForm
+namespace ClothForm.Form
 {
-    public partial class FHelp : Form
+    public partial class FMesh : System.Windows.Forms.Form
     {
-        public FHelp()
+        public FMesh()
         {
             InitializeComponent();
         }

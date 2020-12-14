@@ -8,7 +8,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 namespace ClothForm
 {
-    public partial class FMain : Form
+    public partial class FMain : System.Windows.Forms.Form
     {
         private static int mouseX;
         private FAboutProgram fAboutProgram;
@@ -175,11 +175,11 @@ namespace ClothForm
             }
             if(keys[(int)Keys.W])
             {
-                zSphere -= 0.5f;
+                zSphere -= 0.2f;
             }
             if (keys[(int)Keys.S])
             {
-                zSphere += 0.5f;
+                zSphere += 0.2f;
             }
 
         }

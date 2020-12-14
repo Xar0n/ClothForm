@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using OpenTK;
 namespace ClothForm
 {
-    public partial class FGravity : Form
+    public partial class FGravity : System.Windows.Forms.Form
     {
         public FGravity()
         {

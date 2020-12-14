@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace ClothForm
 {
-    public partial class FSprings : Form
+    public partial class FSprings : System.Windows.Forms.Form
     {
         public FSprings()
         {
