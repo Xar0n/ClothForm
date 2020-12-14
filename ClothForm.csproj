@@ -90,7 +90,7 @@
       <DependentUpon>FSprings.cs</DependentUpon>
     </Compile>
     <Compile Include="Class\Particle.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Class\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Class\Sphere.cs" />
     <Compile Include="Class\Spring.cs" />
@@ -107,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\FMesh.resx">
+      <DependentUpon>FMesh.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\FSprings.resx">
       <DependentUpon>FSprings.cs</DependentUpon>

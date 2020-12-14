@@ -26,6 +26,7 @@ namespace ClothForm
         {
             FMain.cloth.setStretchStiffness(float.Parse(textBox1.Text));
             FMain.cloth.setBendStiffness(float.Parse(textBox2.Text));
+            FMain.cloth.reset();
             this.Close();
         }
 

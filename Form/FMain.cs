@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using ClothForm.Form;
 namespace ClothForm
 {
     public partial class FMain : System.Windows.Forms.Form
@@ -15,6 +16,7 @@ namespace ClothForm
         private FHelp fHelp;
         private FGravity fGravity;
         private FSprings fSprings;
+        private FMesh fMesh;
         private static int mouseY;
         private static bool mouseDownRight;
         private static bool runSim;
@@ -56,7 +58,6 @@ namespace ClothForm
             timer1.Interval = 1000 / 60;
         }
         
-        [STAThread]
         private void timer1_Tick(object sender, EventArgs e)
         {
             renderFrame();
@@ -266,6 +267,7 @@ namespace ClothForm
             fHelp = new FHelp();
             fGravity = new FGravity();
             fSprings = new FSprings();
+            fMesh = new FMesh();
         }
 
         private void controlToolStripMenuItem_Click(object sender, EventArgs e)
@@ -281,6 +283,36 @@ namespace ClothForm
         private void springsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fSprings.ShowDialog();
+        }
+
+        private void DefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cloth = new Cloth();
+            cloth.addSphere(Vector3.Zero, rSphere);
+            showToolStripMenuItem.Enabled = true;
+            simulationToolStripMenuItem.Enabled = true;
+            createSphereToolStripMenuItem.Enabled = true;
+            clearToolStripMenuItem.Enabled = true;
+            dMesh = true;
+            showMeshToolStripMenuItem.Checked = dMesh;
+            dSphere = true;
+        }
+
+        private void meshParamsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fMesh.ShowDialog();
+            if (fMesh.cloth != null)
+            {
+                cloth = fMesh.cloth;
+                cloth.addSphere(Vector3.Zero, rSphere);
+                showToolStripMenuItem.Enabled = true;
+                simulationToolStripMenuItem.Enabled = true;
+                createSphereToolStripMenuItem.Enabled = true;
+                clearToolStripMenuItem.Enabled = true;
+                dMesh = true;
+                showMeshToolStripMenuItem.Checked = dMesh;
+                dSphere = true;
+            }
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -308,15 +340,7 @@ namespace ClothForm
 
         private void createMeshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cloth = new Cloth();
-            cloth.addSphere(Vector3.Zero, rSphere);
-            showToolStripMenuItem.Enabled = true;
-            simulationToolStripMenuItem.Enabled = true;
-            createSphereToolStripMenuItem.Enabled = true;
-            clearToolStripMenuItem.Enabled = true;
-            dMesh = true;
-            showMeshToolStripMenuItem.Checked = dMesh;
-            dSphere = true;
+            
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)

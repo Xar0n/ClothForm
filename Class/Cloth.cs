@@ -1,5 +1,4 @@
 ﻿using OpenTK;
-using System.Collections.Generic;
 
 namespace ClothForm
 {
@@ -8,18 +7,15 @@ namespace ClothForm
         private Triangle triangle;
         private Vertex vertex;
         private Particle particle;
-        private Spring spring;
+        public Spring spring;
         private const int simScale = 1;
         private const float minimumPhysicsDelta = 0.01f;
-        //Размер тканевой сетки
-        private const float clothScale = 20.0f; //10        
-        //Значения данные каждой пружине
-        private float stretchStiffness = 2.5f * clothScale; //Жесткость при растяжении
-        private float bendStiffness = 1.0f * clothScale; //Жесткость при изгибе
+        private const float clothScale = 20.0f;       
+        private float stretchStiffness = 2.5f * clothScale;
+        private float bendStiffness = 1.0f * clothScale;
         private float mass = 0.01f * simScale;
-        //Коэффициент демпфирования. Скорость умножается на это
         private float dampFactor = 0.9f;
-        public const int gridSize = 13 * simScale;
+        public int gridSize = 13 * simScale;
         private Spring_s[] springs;
         private Particle_s[] particles;
         private float timeSinceLastUpdate;
@@ -44,24 +40,18 @@ namespace ClothForm
             this.reset();
         }
 
-        public Cloth(float StretchStiffnessSpring, float BendStiffnessSpring, Vector3 grav)
+        public Cloth(float clothScale, int gridSize, float stretchStiffness, float bendStiffness)
         {
-            stretchStiffness = StretchStiffnessSpring * clothScale; //Жесткость при растяжении
-            bendStiffness = BendStiffnessSpring * clothScale; //Жесткость при сгибании
+            this.stretchStiffness = stretchStiffness * clothScale;
+            this.bendStiffness = bendStiffness * clothScale;
+            this.gridSize = gridSize * simScale;
             gravity = new Vector3(0, -0.98f * simScale, 0);
-            // Подсчитываем количество пружин
-            // Есть пружина, указывающая вправо для каждого шара, который не находится на правом краю,
-            // и пружина направлена ​​вниз для каждого шара не на нижнем крае
-            int springCount = (gridSize - 1) * gridSize * 2;
-            // Пружина направлена ​​вниз и вправо для каждого шара не снизу или справа, 
-            //и одна пружина направлена ​​вниз и влево для каждого шара не снизу или слева
-            springCount += (gridSize - 1) * (gridSize - 1) * 2;
-            // Имеется пружина, указывающая вправо (к следующему, кроме одного шара) 
-            //для каждого шара, который не находится на правом краю или рядом с ним, 
-            //и одна направленная вниз для каждого шара, не находящегося на нижнем крае или рядом с ним
-            springCount += (gridSize - 2) * gridSize * 2;
-            //Создание пространства для частиц и пружин
-            springs = new Spring_s[springCount];
+            particle = new Particle(this.gridSize, mass, clothScale);
+            triangle = new Triangle(this.gridSize);
+            vertex = new Vertex(this.gridSize);
+            spring = new Spring(this.gridSize, this.stretchStiffness, this.bendStiffness);
+            particles = particle.getParticles();
+            springs = spring.getSprings();
             this.initMesh();
             this.reset();
         }
@@ -77,12 +67,8 @@ namespace ClothForm
         public void reset()
         {
             particle.initInMesh();
-            //Закрепляет верхнюю левую и верхнюю правую частицы на месте
             particle.pin(0);
             particle.pin(gridSize - 1);
-            //Закрепляет нижнюю левую и нижнюю правую частицы
-            //particle.pin(gridSize * (gridSize - 1));
-            //particle.pin(gridSize * gridSize - 1);
             spring.init(particles);
             updateMesh();
         }
@@ -97,7 +83,6 @@ namespace ClothForm
         public void simulate(float deltaTime)
         {
             if (deltaTime <= 0) return;
-            //Обновляет физику с интервалом в 10 мс, чтобы предотвратить проблемы с разной частотой кадров, вызывающие разное затухание
             timeSinceLastUpdate += deltaTime;
             bool updateMade = false;
             float timePassedInSeconds = minimumPhysicsDelta;

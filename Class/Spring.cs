@@ -18,7 +18,7 @@ namespace ClothForm
             this.Stiffness = Stiffness;
         }
     }
-    class Spring
+    public class Spring
     {
         private Spring_s[] springs;
         private int gridSize;
