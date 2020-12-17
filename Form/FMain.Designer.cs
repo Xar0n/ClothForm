@@ -35,8 +35,9 @@ namespace ClothForm
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сВыбраннымиПараметрамиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createSphereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startSimToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,8 +51,6 @@ namespace ClothForm
             this.помощьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.управлениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.сВыбраннымиПараметрамиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,8 +96,7 @@ namespace ClothForm
             // 
             this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createMeshToolStripMenuItem,
-            this.clearToolStripMenuItem,
-            this.createSphereToolStripMenuItem});
+            this.clearToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
             this.systemToolStripMenuItem.Text = "Система";
@@ -113,18 +111,26 @@ namespace ClothForm
             this.createMeshToolStripMenuItem.Text = "Создать ткань";
             this.createMeshToolStripMenuItem.Click += new System.EventHandler(this.createMeshToolStripMenuItem_Click);
             // 
+            // DefaultToolStripMenuItem
+            // 
+            this.DefaultToolStripMenuItem.Name = "DefaultToolStripMenuItem";
+            this.DefaultToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.DefaultToolStripMenuItem.Text = "По умочанию";
+            this.DefaultToolStripMenuItem.Click += new System.EventHandler(this.DefaultToolStripMenuItem_Click);
+            // 
+            // сВыбраннымиПараметрамиToolStripMenuItem
+            // 
+            this.сВыбраннымиПараметрамиToolStripMenuItem.Name = "сВыбраннымиПараметрамиToolStripMenuItem";
+            this.сВыбраннымиПараметрамиToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.сВыбраннымиПараметрамиToolStripMenuItem.Text = "С выбранными параметрами";
+            this.сВыбраннымиПараметрамиToolStripMenuItem.Click += new System.EventHandler(this.meshParamsToolStripMenuItem_Click);
+            // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearToolStripMenuItem.Text = "Отчистить";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // createSphereToolStripMenuItem
-            // 
-            this.createSphereToolStripMenuItem.Name = "createSphereToolStripMenuItem";
-            this.createSphereToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.createSphereToolStripMenuItem.Text = "Создать сферу";
             // 
             // simulationToolStripMenuItem
             // 
@@ -230,20 +236,6 @@ namespace ClothForm
             this.aboutProgramToolStripMenuItem.Text = "О программе";
             this.aboutProgramToolStripMenuItem.Click += new System.EventHandler(this.aboutProgramToolStripMenuItem_Click);
             // 
-            // DefaultToolStripMenuItem
-            // 
-            this.DefaultToolStripMenuItem.Name = "DefaultToolStripMenuItem";
-            this.DefaultToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.DefaultToolStripMenuItem.Text = "По умочанию";
-            this.DefaultToolStripMenuItem.Click += new System.EventHandler(this.DefaultToolStripMenuItem_Click);
-            // 
-            // сВыбраннымиПараметрамиToolStripMenuItem
-            // 
-            this.сВыбраннымиПараметрамиToolStripMenuItem.Name = "сВыбраннымиПараметрамиToolStripMenuItem";
-            this.сВыбраннымиПараметрамиToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.сВыбраннымиПараметрамиToolStripMenuItem.Text = "С выбранными параметрами";
-            this.сВыбраннымиПараметрамиToolStripMenuItem.Click += new System.EventHandler(this.meshParamsToolStripMenuItem_Click);
-            // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -280,7 +272,6 @@ namespace ClothForm
         private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gravityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem springsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createSphereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem помощьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem управлениеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutProgramToolStripMenuItem;

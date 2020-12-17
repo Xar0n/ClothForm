@@ -141,7 +141,7 @@ namespace ClothForm
             }
             if (dPoints) {
                 GL.Material(MaterialFace.Front, MaterialParameter.Specular, Color.Black);
-                GL.PointSize(8f);
+                GL.PointSize(10f);
                 GL.Color3(1.0f, 0.0f, 0.0f);
                 GL.Begin(PrimitiveType.Points);
                 foreach (var p in cloth.getVertices) {
@@ -261,7 +261,7 @@ namespace ClothForm
             timer1.Enabled = true;
             showToolStripMenuItem.Enabled = false;
             simulationToolStripMenuItem.Enabled = false;
-            createSphereToolStripMenuItem.Enabled = false;
+
             clearToolStripMenuItem.Enabled = false;
             fAboutProgram = new FAboutProgram();
             fHelp = new FHelp();
@@ -291,7 +291,6 @@ namespace ClothForm
             cloth.addSphere(Vector3.Zero, rSphere);
             showToolStripMenuItem.Enabled = true;
             simulationToolStripMenuItem.Enabled = true;
-            createSphereToolStripMenuItem.Enabled = true;
             clearToolStripMenuItem.Enabled = true;
             dMesh = true;
             showMeshToolStripMenuItem.Checked = dMesh;
@@ -307,7 +306,6 @@ namespace ClothForm
                 cloth.addSphere(Vector3.Zero, rSphere);
                 showToolStripMenuItem.Enabled = true;
                 simulationToolStripMenuItem.Enabled = true;
-                createSphereToolStripMenuItem.Enabled = true;
                 clearToolStripMenuItem.Enabled = true;
                 dMesh = true;
                 showMeshToolStripMenuItem.Checked = dMesh;
@@ -345,7 +343,19 @@ namespace ClothForm
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            showToolStripMenuItem.Enabled = false;
+            simulationToolStripMenuItem.Enabled = false;
+            clearToolStripMenuItem.Enabled = false;
+            dMesh = false;
+            showMeshToolStripMenuItem.Checked = dMesh;
+            dSphere = false;
+            startSimToolStripMenuItem.Text = "Запустить";
+            timer.Stop();
+            runSim = false;
+            dSprings = !dSprings;
+            showSpringsToolStripMenuItem.Checked = dSprings;
+            dPoints = !dPoints;
+            showPointsToolStripMenuItem.Checked = dPoints;
         }
 
         private void drawSpehere(double r, int nx, int ny, float cX, float cY, float cZ)
