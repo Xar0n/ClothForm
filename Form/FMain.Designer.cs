@@ -107,7 +107,7 @@ namespace ClothForm
             this.DefaultToolStripMenuItem,
             this.сВыбраннымиПараметрамиToolStripMenuItem});
             this.createMeshToolStripMenuItem.Name = "createMeshToolStripMenuItem";
-            this.createMeshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createMeshToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.createMeshToolStripMenuItem.Text = "Создать ткань";
             this.createMeshToolStripMenuItem.Click += new System.EventHandler(this.createMeshToolStripMenuItem_Click);
             // 
@@ -128,7 +128,7 @@ namespace ClothForm
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.clearToolStripMenuItem.Text = "Отчистить";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -221,18 +221,19 @@ namespace ClothForm
             this.помощьToolStripMenuItem.Name = "помощьToolStripMenuItem";
             this.помощьToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.помощьToolStripMenuItem.Text = "Помощь";
+            this.помощьToolStripMenuItem.Click += new System.EventHandler(this.помощьToolStripMenuItem_Click);
             // 
             // управлениеToolStripMenuItem
             // 
             this.управлениеToolStripMenuItem.Name = "управлениеToolStripMenuItem";
-            this.управлениеToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.управлениеToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.управлениеToolStripMenuItem.Text = "Управление";
             this.управлениеToolStripMenuItem.Click += new System.EventHandler(this.controlToolStripMenuItem_Click);
             // 
             // aboutProgramToolStripMenuItem
             // 
             this.aboutProgramToolStripMenuItem.Name = "aboutProgramToolStripMenuItem";
-            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutProgramToolStripMenuItem.Text = "О программе";
             this.aboutProgramToolStripMenuItem.Click += new System.EventHandler(this.aboutProgramToolStripMenuItem_Click);
             // 

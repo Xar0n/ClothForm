@@ -313,6 +313,11 @@ namespace ClothForm
             }
         }
 
+        private void помощьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void glControl1_Resize(object sender, EventArgs e)
         {
             GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
