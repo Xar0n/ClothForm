@@ -37,8 +37,6 @@ namespace ClothForm
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -68,80 +66,60 @@ namespace ClothForm
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(22, 50);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(338, 24);
+            this.label3.Size = new System.Drawing.Size(336, 24);
             this.label3.TabIndex = 2;
-            this.label3.Text = "W - в положительную сторону оси X";
+            this.label3.Text = "W - в положительную сторону оси Z";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(22, 83);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(333, 24);
+            this.label4.Size = new System.Drawing.Size(331, 24);
             this.label4.TabIndex = 3;
-            this.label4.Text = "S -  в отрицательную сторону оси X";
+            this.label4.Text = "S -  в отрицательную сторону оси Z";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(25, 118);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(331, 24);
+            this.label5.Size = new System.Drawing.Size(333, 24);
             this.label5.TabIndex = 4;
-            this.label5.Text = "D - в положительную сторону оси Z";
+            this.label5.Text = "D - в положительную сторону оси X";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(25, 153);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(327, 24);
+            this.label6.Size = new System.Drawing.Size(329, 24);
             this.label6.TabIndex = 5;
-            this.label6.Text = "A - в отрицательную сторону оси Z";
+            this.label6.Text = "A - в отрицательную сторону оси X";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(64, 227);
+            this.label7.Location = new System.Drawing.Point(22, 220);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(60, 24);
+            this.label7.Size = new System.Drawing.Size(343, 24);
             this.label7.TabIndex = 6;
-            this.label7.Text = "label7";
+            this.label7.Text = "Отсоеденить/Присоеденить массу 1";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(89, 275);
+            this.label8.Location = new System.Drawing.Point(22, 253);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(60, 24);
+            this.label8.Size = new System.Drawing.Size(343, 24);
             this.label8.TabIndex = 7;
-            this.label8.Text = "label8";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(125, 330);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(60, 24);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "label9";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(125, 372);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(70, 24);
-            this.label10.TabIndex = 9;
-            this.label10.Text = "label10";
+            this.label8.Text = "Отсоеденить/Присоеденить массу 2";
             // 
             // FHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 443);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
+            this.ClientSize = new System.Drawing.Size(396, 296);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -171,7 +149,5 @@ namespace ClothForm
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
     }
 }

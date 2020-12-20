@@ -174,15 +174,12 @@ namespace ClothForm
                 curAngleHorizontal = (mouseX / (float)glControl1.Width) * MathHelper.DegreesToRadians(360);
                 curAngleVertical = (mouseY / (float)glControl1.Height) * MathHelper.DegreesToRadians(360);
             }
-            if(keys[(int)Keys.W])
-            {
-                zSphere -= 0.2f;
-            }
-            if (keys[(int)Keys.S])
-            {
-                zSphere += 0.2f;
-            }
-
+            if(keys[(int)Keys.W]) zSphere -= 0.2f;
+            if (keys[(int)Keys.S]) zSphere += 0.2f;
+            if (keys[(int)Keys.A]) xSphere -= 0.2f;
+            if (keys[(int)Keys.D]) xSphere += 0.2f;
+            if (keys[(int)Keys.D1]) cloth.pinParticle(0);
+            if (keys[(int)Keys.D2]) cloth.pinParticle(cloth.gridSize - 1);
         }
 
         private void glControl1_KeyDown(object sender, KeyEventArgs e)
@@ -197,7 +194,7 @@ namespace ClothForm
 
         private void glControl1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Right)
             {
                 mouseDownRight = true;
             }
@@ -222,7 +219,7 @@ namespace ClothForm
 
         private void glControl1_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Right)
             {
                 mouseDownRight = false;
             }
@@ -295,6 +292,9 @@ namespace ClothForm
             dMesh = true;
             showMeshToolStripMenuItem.Checked = dMesh;
             dSphere = true;
+            xSphere = 0;
+            ySphere = 0;
+            zSphere = 0;
         }
 
         private void meshParamsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -310,6 +310,9 @@ namespace ClothForm
                 dMesh = true;
                 showMeshToolStripMenuItem.Checked = dMesh;
                 dSphere = true;
+                xSphere = 0;
+                ySphere = 0;
+                zSphere = 0;
             }
         }
 
